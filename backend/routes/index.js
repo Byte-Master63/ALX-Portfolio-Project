@@ -1,16 +1,11 @@
-/**
- * @file routes/index.js
- * @description Combines all API route modules for easy inclusion in main server file.
- */
-
 const express = require('express');
 const router = express.Router();
+const transactions = require('./transactions');
+const budgets = require('./budgets');
+const summary = require('./summary');
 
-// Subroutes
-router.use('/auth', require('./auth'));
-router.use('/transactions', require('./transactions'));
-router.use('/categories', require('./categories'));
-router.use('/budgets', require('./budgets'));
+router.use('/transactions', transactions);
+router.use('/budgets', budgets);
+router.use('/summary', summary);
 
 module.exports = router;
-
