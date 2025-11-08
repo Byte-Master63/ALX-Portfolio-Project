@@ -33,8 +33,13 @@ async function readData(filePath, dataType) {
         
         return parsed;
     } catch (error) {
-        console.error(`Error reading ${filePath}:`, error);
-        return [];
+        if (error.code === 'ENOENT') {
+            console.warn(`${dataType} file not found, returning empty array`);
+            return [];
+        }
+        
+        console.error(`Error reading ${dataType} from ${filePath}:`, error.message);
+        throw new Error(`Failed to read ${dataType}: ${error.message}`);
     }
 }
 
