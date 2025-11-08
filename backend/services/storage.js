@@ -1,26 +1,37 @@
 const fs = require('fs').promises;
 const { TRANSACTIONS_FILE, BUDGETS_FILE } = require('../config/database');
 
+// Write locks to prevent race conditions
+const writeLocks = new Map();
+
 async function readTransactions() {
-    return readData(TRANSACTIONS_FILE);
+    return readData(TRANSACTIONS_FILE, transactions);
 }
 
 async function writeTransactions(data) {
-    return writeData(TRANSACTIONS_FILE, data);
+    return writeData(TRANSACTIONS_FILE, data, 'transactions');
 }
 
 async function readBudgets() {
-    return readData(BUDGETS_FILE);
+    return readData(BUDGETS_FILE, 'budgets');
 }
 
 async function writeBudgets(data) {
-    return writeData(BUDGETS_FILE, data);
+    return writeData(BUDGETS_FILE, data, budgets);
 }
 
-async function readData(filePath) {
+async function readData(filePath, dataType) {
     try {
         const data = await fs.readFile(filePath, 'utf8');
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        
+        // Validate that parsed data is an array
+        if (!Array.isArray(parsed)) {
+            console.error(`Error: ${dataType} file contains non-array data, returning empty array`);
+            return [];
+        }
+        
+        return parsed;
     } catch (error) {
         console.error(`Error reading ${filePath}:`, error);
         return [];
