@@ -43,12 +43,32 @@ async function readData(filePath, dataType) {
     }
 }
 
-async function writeData(filePath, data) {
+async function writeData(filePath, data, dataType) {
+    // Validate input
+    if (!Array.isArray(data)) {
+        throw new Error(`${dataType} data must be an array`);
+    }
+    // Acquire write lock
+    while (writeLocks.get(filePath)) {
+        await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    writeLocks.set(filePath, true);
+    
     try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+        // Write to temporary file first (atomic write)
+        const tempPath = `${filePath}.tmp`;
+        await fs.writeFile(tempPath, JSON.stringify(data, null, 2), 'utf8');
+        
+        // Rename temp file to actual file (atomic operation)
+        await fs.rename(tempPath, filePath);
+        
+        console.log(`✅ ${dataType} saved successfully (${data.length} items)`);
     } catch (error) {
-        console.error(`Error writing to ${filePath}:`, error);
-        throw error;
+        console.error(`Error writing ${dataType} to ${filePath}:`, error.message);
+        throw new Error(`Failed to write ${dataType}: ${error.message}`);
+    } finally {
+        // Release write lock
+        writeLocks.delete(filePath);
     }
 }
 
