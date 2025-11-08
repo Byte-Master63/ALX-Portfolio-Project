@@ -8,7 +8,7 @@ async function startServer() {
     try {
         await initializeStorage();
         
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, () => {
             console.log(`🚀 Money Mate server running on port ${PORT}`);
             console.log(`📊 Open your browser to http://localhost:${PORT}`);
             console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -33,7 +33,7 @@ async function startServer() {
 
     } catch (error) {
         console.error('❌ Failed to start server:', error);
-         console.error('Stack trace:', error.stack);
+        console.error('Stack trace:', error.stack);
         process.exit(1);
     }
 }
