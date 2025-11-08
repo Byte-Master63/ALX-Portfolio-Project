@@ -1,4 +1,4 @@
-rquire('dotenv').config();
+require('dotenv').config();
 const app = require('./app');
 const { initializeStorage } = require('./config/database');
 
