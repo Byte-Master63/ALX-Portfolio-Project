@@ -34,3 +34,34 @@ function isValidDate(dateString) {
     const date = new Date(dateString);
      return date instanceof Date && !isNaN(date);
 }
+
+/**
+ * Formats a number as currency
+ * @param {number} amount - Amount to format
+ * @param {string} currency - Currency code (default: USD)
+ * @returns {string} Formatted currency string
+ */
+function formatCurrency(amount, currency = 'USD') {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency
+    }).format(amount);
+}
+
+/**
+ * Sanitizes user input by trimming and removing extra spaces
+ * @param {string} input - Input string to sanitize
+ * @returns {string} Sanitized string
+ */
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+    return input.trim().replace(/\s+/g, ' ');
+}
+
+/**
+ * Gets current date in YYYY-MM-DD format
+ * @returns {string} Current date string
+ */
+function getCurrentDate() {
+    return new Date().toISOString().split('T')[0];
+}
