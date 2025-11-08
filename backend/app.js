@@ -29,6 +29,15 @@ if (process.env.NODE_ENV !== 'production') {
 // Static files (if needed)
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: '💰 Money Mate API is live and running!',
+        environment: process.env.NODE_ENV || 'development',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
