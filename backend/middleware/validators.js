@@ -1,3 +1,20 @@
+const { isValidDate, sanitizeInput } = require('../services/utils');
+
+// Define allowed categories
+const VALID_CATEGORIES = [
+    'food',
+    'transport',
+    'entertainment',
+    'utilities',
+    'healthcare',
+    'shopping',
+    'education',
+    'salary',
+    'freelance',
+    'investment',
+    'other'
+];
+
 function validateTransaction(transaction) {
     const errors = [];
     
