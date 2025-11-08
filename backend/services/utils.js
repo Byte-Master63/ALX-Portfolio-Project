@@ -65,3 +65,12 @@ function sanitizeInput(input) {
 function getCurrentDate() {
     return new Date().toISOString().split('T')[0];
 }
+
+module.exports = {
+    generateId,
+    generateUUID,
+    isValidDate,
+    formatCurrency,
+    sanitizeInput,
+    getCurrentDate
+};
