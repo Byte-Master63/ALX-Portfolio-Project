@@ -15,6 +15,10 @@ const VALID_CATEGORIES = [
     'other'
 ];
 
+// Define allowed transaction types
+const TRANSACTION_TYPES = ['income', 'expense'];
+
+
 /**
  * Validates transaction data
  * @param {Object} transaction - Transaction object to validate
