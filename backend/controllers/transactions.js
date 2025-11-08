@@ -15,6 +15,17 @@ async function getTransactions(req, res) {
     }
 }
 
+async function getTransactionById(req, res) {
+    const transactions = await readTransactions();
+    const transaction = transactions.find(t => t.id === req.params.id);
+    
+    if (!transaction) {
+        throw new NotFoundError('Transaction not found');
+    }
+    
+    res.json({ success: true, data: transaction });
+}
+
 async function createTransaction(req, res) {
     try {
         const validation = validateTransaction(req.body);
@@ -55,6 +66,35 @@ async function createTransaction(req, res) {
     }
 }
 
+async function updateTransaction(req, res) {
+    const transactions = await readTransactions();
+    const transactionIndex = transactions.findIndex(t => t.id === req.params.id);
+    
+    if (transactionIndex === -1) {
+        throw new NotFoundError('Transaction not found');
+    }
+    
+    // Keep original ID and createdAt
+    const updatedTransaction = {
+        ...transactions[transactionIndex],
+        description: req.body.description.trim(),
+        amount: parseFloat(req.body.amount),
+        category: req.body.category.trim().toLowerCase(),
+        type: req.body.type,
+        date: req.body.date || transactions[transactionIndex].date,
+        updatedAt: new Date().toISOString()
+    };
+    
+    transactions[transactionIndex] = updatedTransaction;
+    await writeTransactions(transactions);
+    
+    res.json({
+        success: true,
+        message: 'Transaction updated successfully',
+        data: updatedTransaction
+    });
+}
+
 async function deleteTransaction(req, res) {
     try {
         const transactions = await readTransactions();
@@ -84,8 +124,11 @@ async function deleteTransaction(req, res) {
     }
 }
 
+
 module.exports = {
     getTransactions,
+    getTransactionById,
     createTransaction,
+    updateTransaction, 
     deleteTransaction
 };
