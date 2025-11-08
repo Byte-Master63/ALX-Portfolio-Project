@@ -1,22 +1,26 @@
-const { generateId } = require('../services/utils');
+const { generateId, sanitizeInput } = require('../services/utils');
 const { readBudgets, writeBudgets } = require('../services/storage');
+const { NotFoundError, ConflictError } = require('../middleware/errorHandler');
 
+/**
+ * Get all budgets
+ */
 async function getBudgets(req, res) {
-    try {
-        const budgets = await readBudgets();
-        res.json({
-            success: true,
-            data: budgets
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching budgets',
-            error: error.message
-        });
-    }
+    const budgets = await readBudgets();
+    
+    // Sort by category alphabetically
+    budgets.sort((a, b) => a.category.localeCompare(b.category));
+    
+    res.json({
+        success: true,
+        data: budgets,
+        count: budgets.length
+    });
 }
 
+/**
+ * Get a single budget by ID
+ */
 async function getBudgetById(req, res) {
     const budgets = await readBudgets();
     const budget = budgets.find(b => b.id === req.params.id);
@@ -25,24 +29,36 @@ async function getBudgetById(req, res) {
         throw new NotFoundError('Budget not found');
     }
     
-    res.json({ success: true, data: budget });
+    res.json({
+        success: true,
+        data: budget
+    });
 }
+
+/**
+ * Create a new budget
+ */
 async function createBudget(req, res) {
+    // Validation already handled by middleware
     const { category, limit } = req.body;
     const budgets = await readBudgets();
     
+    const normalizedCategory = sanitizeInput(category).toLowerCase();
+    
     // Check if budget for this category already exists
     const existingBudget = budgets.find(
-        b => b.category.toLowerCase() === category.toLowerCase()
+        b => b.category.toLowerCase() === normalizedCategory
     );
     
     if (existingBudget) {
-        throw new ConflictError(`Budget for category "${category}" already exists`);
+        throw new ConflictError(
+            `Budget for category "${normalizedCategory}" already exists. Use PUT to update it.`
+        );
     }
     
     const newBudget = {
         id: generateId(),
-        category: category.trim().toLowerCase(),
+        category: normalizedCategory,
         limit: parseFloat(limit),
         createdAt: new Date().toISOString()
     };
@@ -57,7 +73,11 @@ async function createBudget(req, res) {
     });
 }
 
+/**
+ * Update an existing budget
+ */
 async function updateBudget(req, res) {
+    // Validation already handled by middleware
     const { category, limit } = req.body;
     const budgets = await readBudgets();
     const budgetIndex = budgets.findIndex(b => b.id === req.params.id);
@@ -66,20 +86,25 @@ async function updateBudget(req, res) {
         throw new NotFoundError('Budget not found');
     }
     
+    const normalizedCategory = sanitizeInput(category).toLowerCase();
+    
     // Check if updating category conflicts with another budget
     const conflictingBudget = budgets.find(
         b => b.id !== req.params.id && 
-        b.category.toLowerCase() === category.toLowerCase()
+        b.category.toLowerCase() === normalizedCategory
     );
     
     if (conflictingBudget) {
-        throw new ConflictError(`Another budget for category "${category}" already exists`);
+        throw new ConflictError(
+            `Another budget for category "${normalizedCategory}" already exists`
+        );
     }
     
     const updatedBudget = {
-        ...budgets[budgetIndex],
-        category: category.trim().toLowerCase(),
+        id: budgets[budgetIndex].id,
+        category: normalizedCategory,
         limit: parseFloat(limit),
+        createdAt: budgets[budgetIndex].createdAt,
         updatedAt: new Date().toISOString()
     };
     
@@ -93,6 +118,9 @@ async function updateBudget(req, res) {
     });
 }
 
+/**
+ * Delete a budget
+ */
 async function deleteBudget(req, res) {
     const budgets = await readBudgets();
     const budgetIndex = budgets.findIndex(b => b.id === req.params.id);
@@ -110,8 +138,6 @@ async function deleteBudget(req, res) {
         data: deletedBudget
     });
 }
-
-const { NotFoundError, ConflictError } = require('../middleware/errorHandler');
 
 module.exports = {
     getBudgets,
