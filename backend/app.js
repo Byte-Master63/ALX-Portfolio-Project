@@ -29,7 +29,10 @@ if (process.env.NODE_ENV !== 'production') {
 // Static files (if needed)
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 // Routes
 app.use('/api', routes);
