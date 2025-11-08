@@ -17,52 +17,106 @@ async function getBudgets(req, res) {
     }
 }
 
-async function createOrUpdateBudget(req, res) {
-    try {
-        const { category, limit } = req.body;
-        
-        if (!category || !limit || isNaN(limit) || limit <= 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Category and valid limit are required'
-            });
-        }
-        
-        const budgets = await readBudgets();
-        const existingBudgetIndex = budgets.findIndex(b => b.category === category);
-        
-        if (existingBudgetIndex !== -1) {
-            // Update existing budget
-            budgets[existingBudgetIndex].limit = parseFloat(limit);
-            budgets[existingBudgetIndex].updatedAt = new Date().toISOString();
-        } else {
-            // Create new budget
-            const newBudget = {
-                id: generateId(),
-                category: category.trim(),
-                limit: parseFloat(limit),
-                createdAt: new Date().toISOString()
-            };
-            budgets.push(newBudget);
-        }
-        
-        await writeBudgets(budgets);
-        
-        res.json({
-            success: true,
-            message: 'Budget saved successfully',
-            data: budgets
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error saving budget',
-            error: error.message
-        });
+async function getBudgetById(req, res) {
+    const budgets = await readBudgets();
+    const budget = budgets.find(b => b.id === req.params.id);
+    
+    if (!budget) {
+        throw new NotFoundError('Budget not found');
     }
+    
+    res.json({ success: true, data: budget });
 }
+async function createBudget(req, res) {
+    const { category, limit } = req.body;
+    const budgets = await readBudgets();
+    
+    // Check if budget for this category already exists
+    const existingBudget = budgets.find(
+        b => b.category.toLowerCase() === category.toLowerCase()
+    );
+    
+    if (existingBudget) {
+        throw new ConflictError(`Budget for category "${category}" already exists`);
+    }
+    
+    const newBudget = {
+        id: generateId(),
+        category: category.trim().toLowerCase(),
+        limit: parseFloat(limit),
+        createdAt: new Date().toISOString()
+    };
+    
+    budgets.push(newBudget);
+    await writeBudgets(budgets);
+    
+    res.status(201).json({
+        success: true,
+        message: 'Budget created successfully',
+        data: newBudget
+    });
+}
+
+async function updateBudget(req, res) {
+    const { category, limit } = req.body;
+    const budgets = await readBudgets();
+    const budgetIndex = budgets.findIndex(b => b.id === req.params.id);
+    
+    if (budgetIndex === -1) {
+        throw new NotFoundError('Budget not found');
+    }
+    
+    // Check if updating category conflicts with another budget
+    const conflictingBudget = budgets.find(
+        b => b.id !== req.params.id && 
+        b.category.toLowerCase() === category.toLowerCase()
+    );
+    
+    if (conflictingBudget) {
+        throw new ConflictError(`Another budget for category "${category}" already exists`);
+    }
+    
+    const updatedBudget = {
+        ...budgets[budgetIndex],
+        category: category.trim().toLowerCase(),
+        limit: parseFloat(limit),
+        updatedAt: new Date().toISOString()
+    };
+    
+    budgets[budgetIndex] = updatedBudget;
+    await writeBudgets(budgets);
+    
+    res.json({
+        success: true,
+        message: 'Budget updated successfully',
+        data: updatedBudget
+    });
+}
+
+async function deleteBudget(req, res) {
+    const budgets = await readBudgets();
+    const budgetIndex = budgets.findIndex(b => b.id === req.params.id);
+    
+    if (budgetIndex === -1) {
+        throw new NotFoundError('Budget not found');
+    }
+    
+    const deletedBudget = budgets.splice(budgetIndex, 1)[0];
+    await writeBudgets(budgets);
+    
+    res.json({
+        success: true,
+        message: 'Budget deleted successfully',
+        data: deletedBudget
+    });
+}
+
+const { NotFoundError, ConflictError } = require('../middleware/errorHandler');
 
 module.exports = {
     getBudgets,
-    createOrUpdateBudget
+    getBudgetById,
+    createBudget,
+    updateBudget,
+    deleteBudget
 };
