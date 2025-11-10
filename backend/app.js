@@ -18,7 +18,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' })); //add size limit
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Request logging (development only)
+// Request logging
 if (process.env.NODE_ENV !== 'production') {
     app.use((req, res, next) => {
         console.log(`${req.method} ${req.path}`, req.body);
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
-// Static files (if needed)
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
