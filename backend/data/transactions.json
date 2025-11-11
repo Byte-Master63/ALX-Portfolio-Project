@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "mhtyefb1-fcd22aabf09b20bd",
+    "description": "Grocery shopping at Woolworths",
+    "amount": 450.75,
+    "category": "food",
+    "type": "expense",
+    "date": "2025-11-10",
+    "createdAt": "2025-11-11T02:30:10.454Z"
+  },
+  {
+    "id": "mhtytnqm-7cb2c46c4131e7e6",
+    "description": "Monthly salary",
+    "amount": 25000,
+    "category": "salary",
+    "type": "income",
+    "date": "2025-11-01",
+    "createdAt": "2025-11-11T02:41:59.689Z"
+  },
+  {
+    "id": "mhtyv437-8f101f5a84b68419",
+    "description": "Uber to work",
+    "amount": 85.5,
+    "category": "transport",
+    "type": "expense",
+    "date": "2025-11-09",
+    "createdAt": "2025-11-11T02:43:07.511Z"
+  },
+  {
+    "id": "mhtywg00-84930362ecdb3e3c",
+    "description": "Netflix subscription",
+    "amount": 199,
+    "category": "entertainment",
+    "type": "expense",
+    "date": "2025-11-08",
+    "createdAt": "2025-11-11T02:44:09.636Z"
+  },
+  {
+    "id": "mhtyxrne-3bd2f095ad830641",
+    "description": "Freelance project payment",
+    "amount": 5000,
+    "category": "freelance",
+    "type": "income",
+    "date": "2025-11-07",
+    "createdAt": "2025-11-11T02:45:11.355Z"
+  }
+]
