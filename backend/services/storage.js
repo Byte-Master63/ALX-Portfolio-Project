@@ -5,7 +5,7 @@ const { TRANSACTIONS_FILE, BUDGETS_FILE } = require('../config/database');
 const writeLocks = new Map();
 
 async function readTransactions() {
-    return readData(TRANSACTIONS_FILE, transactions);
+    return readData(TRANSACTIONS_FILE, 'transactions');
 }
 
 async function writeTransactions(data) {
@@ -17,12 +17,12 @@ async function readBudgets() {
 }
 
 async function writeBudgets(data) {
-    return writeData(BUDGETS_FILE, data, budgets);
+    return writeData(BUDGETS_FILE, data, 'budgets');
 }
 
 async function readData(filePath, dataType) {
     try {
-        const data = await fs.readFile(filePath, 'utf8');
+        const fileContent = await fs.readFile(filePath, 'utf8');
         const parsed = JSON.parse(fileContent);
         
         // Validate that parsed data is an array
@@ -48,6 +48,7 @@ async function writeData(filePath, data, dataType) {
     if (!Array.isArray(data)) {
         throw new Error(`${dataType} data must be an array`);
     }
+    
     // Acquire write lock
     while (writeLocks.get(filePath)) {
         await new Promise(resolve => setTimeout(resolve, 10));
