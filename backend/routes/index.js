@@ -22,10 +22,10 @@ router.get('/', (req, res) => {
         },
         documentation: 'See README.md for API documentation'
     });
-);
+});
 
 // Protected routes (authentication required)
-// TODO: Uncomment when auth endpoints are implemented
+// Apply auth middleware to all routes below
 //router.use(auth);
 
 router.use('/transactions', transactions);
