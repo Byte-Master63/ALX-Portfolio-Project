@@ -23,7 +23,7 @@ async function writeBudgets(data) {
 async function readData(filePath, dataType) {
     try {
         const data = await fs.readFile(filePath, 'utf8');
-        const parsed = JSON.parse(data);
+        const parsed = JSON.parse(fileContent);
         
         // Validate that parsed data is an array
         if (!Array.isArray(parsed)) {
