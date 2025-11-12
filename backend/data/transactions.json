@@ -42,7 +42,8 @@
     "category": "food",
     "type": "expense",
     "date": "2025-11-10",
-    "createdAt": "2025-11-11T17:55:48.880Z"
+    "createdAt": "2025-11-11T17:55:48.880Z",
+    "updatedAt": "2025-11-12T16:31:15.137Z"
   },
   {
     "id": "mhuvn6ua-75c1da51a2647d88",
