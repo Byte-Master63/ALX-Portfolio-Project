@@ -1,14 +1,5 @@
 [
   {
-    "id": "mhtyefb1-fcd22aabf09b20bd",
-    "description": "Grocery shopping at Woolworths",
-    "amount": 450.75,
-    "category": "food",
-    "type": "expense",
-    "date": "2025-11-10",
-    "createdAt": "2025-11-11T02:30:10.454Z"
-  },
-  {
     "id": "mhtytnqm-7cb2c46c4131e7e6",
     "description": "Monthly salary",
     "amount": 25000,
@@ -43,5 +34,23 @@
     "type": "income",
     "date": "2025-11-07",
     "createdAt": "2025-11-11T02:45:11.355Z"
+  },
+  {
+    "id": "mhuvgsti-a29a2db63c529579",
+    "description": "Updated grocery shopping at Checkers",
+    "amount": 500,
+    "category": "food",
+    "type": "expense",
+    "date": "2025-11-10",
+    "createdAt": "2025-11-11T17:55:48.880Z"
+  },
+  {
+    "id": "mhuvn6ua-75c1da51a2647d88",
+    "description": "Grocery shopping at Woolworths",
+    "amount": 450.75,
+    "category": "food",
+    "type": "expense",
+    "date": "2025-11-10",
+    "createdAt": "2025-11-11T18:00:45.170Z"
   }
 ]

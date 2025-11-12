@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "mhuwi1l0-ebe8c6556290c73f",
+    "category": "transport",
+    "limit": 1500,
+    "createdAt": "2025-11-11T18:24:45.248Z"
+  },
+  {
+    "id": "mhuwjnyf-cf69900fdc563a76",
+    "category": "entertainment",
+    "limit": 500,
+    "createdAt": "2025-11-11T18:26:00.327Z"
+  }
+]
