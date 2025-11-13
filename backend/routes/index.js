@@ -4,6 +4,7 @@ const { auth } = require('../middleware/auth');
 const transactions = require('./transactions');
 const budgets = require('./budgets');
 const summary = require('./summary');
+const authRoutes = require('./auth');
 
 // Public routes (no authentication required)
 // Add auth routes here when implemented
@@ -16,6 +17,7 @@ router.get('/', (req, res) => {
         message: 'Money Mate API',
         version: '1.0.0',
         endpoints: {
+            auth: '/api/auth',
             transactions: '/api/transactions',
             budgets: '/api/budgets',
             summary: '/api/summary'
@@ -24,9 +26,9 @@ router.get('/', (req, res) => {
     });
 });
 
+router.use('/auth', authRoutes);
 // Protected routes (authentication required)
-// Apply auth middleware to all routes below
-//router.use(auth);
+router.use(auth);
 
 router.use('/transactions', transactions);
 router.use('/budgets', budgets);
