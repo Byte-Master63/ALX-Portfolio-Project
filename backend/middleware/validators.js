@@ -161,11 +161,125 @@ function validateBudgetMiddleware(req, res, next) {
     next();
 }
 
+// ... existing code ...
+
+/**
+ * Validates registration data
+ * @param {Object} data - Registration data
+ * @returns {Object} Validation result
+ */
+function validateRegistration(data) {
+    const errors = [];
+    
+    // Validate name
+    if (!data.name) {
+        errors.push('Name is required');
+    } else {
+        const name = sanitizeInput(data.name);
+        if (name.length < 2) {
+            errors.push('Name must be at least 2 characters long');
+        } else if (name.length > 100) {
+            errors.push('Name must not exceed 100 characters');
+        }
+    }
+    
+    // Validate email
+    if (!data.email) {
+        errors.push('Email is required');
+    } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(data.email)) {
+            errors.push('Please provide a valid email address');
+        }
+    }
+    
+    // Validate password
+    if (!data.password) {
+        errors.push('Password is required');
+    } else if (data.password.length < 6) {
+        errors.push('Password must be at least 6 characters long');
+    } else if (data.password.length > 100) {
+        errors.push('Password must not exceed 100 characters');
+    }
+    
+    return {
+        isValid: errors.length === 0,
+        errors
+    };
+}
+
+/**
+ * Validates login data
+ * @param {Object} data - Login data
+ * @returns {Object} Validation result
+ */
+function validateLogin(data) {
+    const errors = [];
+    
+    // Validate email
+    if (!data.email) {
+        errors.push('Email is required');
+    } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(data.email)) {
+            errors.push('Please provide a valid email address');
+        }
+    }
+    
+    // Validate password
+    if (!data.password) {
+        errors.push('Password is required');
+    }
+    
+    return {
+        isValid: errors.length === 0,
+        errors
+    };
+}
+
+/**
+ * Middleware to validate registration in request body
+ */
+function validateRegistrationMiddleware(req, res, next) {
+    const validation = validateRegistration(req.body);
+    
+    if (!validation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: validation.errors
+        });
+    }
+    
+    next();
+}
+
+/**
+ * Middleware to validate login in request body
+ */
+function validateLoginMiddleware(req, res, next) {
+    const validation = validateLogin(req.body);
+    
+    if (!validation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: validation.errors
+        });
+    }
+    
+    next();
+}
+
 module.exports = {
     validateTransaction,
     validateBudget,
     validateTransactionMiddleware,
     validateBudgetMiddleware,
+    validateRegistration,        // NEW
+    validateLogin,              // NEW
+    validateRegistrationMiddleware,  // NEW
+    validateLoginMiddleware,    // NEW
     VALID_CATEGORIES,
     TRANSACTION_TYPES
 };
