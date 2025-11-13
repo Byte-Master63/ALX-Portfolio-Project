@@ -4,6 +4,7 @@ const path = require('path');
 const DATA_DIR = path.join(__dirname, '../data');
 const TRANSACTIONS_FILE = path.join(DATA_DIR, 'transactions.json');
 const BUDGETS_FILE = path.join(DATA_DIR, 'budgets.json');
+const USERS_FILE = path.join(DATA_DIR, 'users.json');
 
 /**
  * Validates and initializes a JSON file
@@ -38,6 +39,7 @@ async function initializeStorage() {
         // Initialize both data files
         await initializeFile(TRANSACTIONS_FILE, 'transactions.json');
         await initializeFile(BUDGETS_FILE, 'budgets.json');
+        await initializeFile(USERS_FILE, 'users.json'); 
         
         console.log('✅ Data storage initialized successfully');
     } catch (error) {
@@ -50,5 +52,6 @@ module.exports = {
     initializeStorage,
     TRANSACTIONS_FILE,
     BUDGETS_FILE,
+    USERS_FILE,
     DATA_DIR
 };
