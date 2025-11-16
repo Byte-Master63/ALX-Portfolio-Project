@@ -1,14 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import { FinanceProvider } from './contexts/FinanceContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
-    <FinanceProvider>
-      <App />
-    </FinanceProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <ErrorBoundary>
+      <FinanceProvider>
+        <App />
+      </FinanceProvider>
+    </ErrorBoundary>
+  </React.StrictMode>
 );
