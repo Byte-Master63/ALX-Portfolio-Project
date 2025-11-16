@@ -1,20 +1,47 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
+import NotFound from './pages/NotFound/NotFound';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <div className="app">
-        <Header />
-        <main className="container">
-          <Switch>
-            <Route exact path="/" component={Dashboard} />
-          </Switch>
-        </main>
-      </div>
+      <AuthProvider>
+        <div className="app">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <>
+                    <Header />
+                    <main className="container">
+                      <Dashboard />
+                    </main>
+                  </>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Redirect root to dashboard */}
+            <Route path="/dashboard" element={<Navigate to="/" replace />} />
+
+            {/* 404 Page */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </AuthProvider>
     </Router>
   );
 }
