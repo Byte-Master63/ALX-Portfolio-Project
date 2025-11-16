@@ -1,0 +1,45 @@
+.transaction-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin: 0 0 16px;
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px;
+}
+
+.empty-subtext {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.transaction-summary {
+  text-align: center;
+  padding: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.transaction-summary p {
+  margin: 0;
+}
