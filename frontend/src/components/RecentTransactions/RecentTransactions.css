@@ -1,0 +1,81 @@
+.recent-transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recent-transactions-empty {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.recent-transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.recent-transaction-item:hover {
+  background: #f0f0f0;
+}
+
+.recent-transaction-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+}
+
+.recent-transaction-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-transaction-description {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-transaction-meta {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.recent-transaction-amount {
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.recent-transaction-amount.income {
+  color: #4caf50;
+}
+
+.recent-transaction-amount.expense {
+  color: #f44336;
+}
+
+@media (max-width: 768px) {
+  .recent-transaction-description {
+    font-size: 13px;
+  }
+  
+  .recent-transaction-amount {
+    font-size: 14px;
+  }
+}

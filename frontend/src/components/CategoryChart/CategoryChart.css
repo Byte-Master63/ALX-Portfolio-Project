@@ -1,0 +1,61 @@
+.category-chart {
+  width: 100%;
+}
+
+.category-chart-empty {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.category-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.category-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-bar-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-bar-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.category-bar-amount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.category-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-bar-fill {
+  height: 24px;
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  position: relative;
+  min-width: 2%;
+}
+
+.category-bar-percentage {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  min-width: 45px;
+  text-align: right;
+}

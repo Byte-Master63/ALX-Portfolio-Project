@@ -1,0 +1,10 @@
+.budget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.budget-list .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
