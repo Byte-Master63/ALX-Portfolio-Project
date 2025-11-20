@@ -2,17 +2,27 @@ import React from 'react';
 import './TransactionFilter.css';
 
 const CATEGORIES = [
-  { value: 'food', label: 'Food' },
-  { value: 'transport', label: 'Transport' },
-  { value: 'entertainment', label: 'Entertainment' },
-  { value: 'utilities', label: 'Utilities' },
-  { value: 'healthcare', label: 'Healthcare' },
-  { value: 'shopping', label: 'Shopping' },
-  { value: 'education', label: 'Education' },
-  { value: 'salary', label: 'Salary' },
-  { value: 'freelance', label: 'Freelance' },
-  { value: 'investment', label: 'Investment' },
-  { value: 'other', label: 'Other' }
+  { value: 'food', label: '🍔 Food & Dining' },
+  { value: 'transport', label: '🚗 Transportation' },
+  { value: 'entertainment', label: '🎬 Entertainment' },
+  { value: 'utilities', label: '💡 Utilities' },
+  { value: 'healthcare', label: '⚕️ Healthcare' },
+  { value: 'shopping', label: '🛍️ Shopping' },
+  { value: 'education', label: '📚 Education' },
+  { value: 'housing', label: '🏠 Housing' },
+  { value: 'insurance', label: '🛡️ Insurance' },
+  { value: 'debt', label: '💳 Debt' },
+  { value: 'fitness', label: '💪 Fitness' },
+  { value: 'gifts', label: '🎁 Gifts' },
+  { value: 'travel', label: '✈️ Travel' },
+  { value: 'pets', label: '🐾 Pets' },
+  { value: 'subscriptions', label: '📱 Subscriptions' },
+  { value: 'personal', label: '💇 Personal Care' },
+  { value: 'salary', label: '💼 Salary' },
+  { value: 'freelance', label: '💻 Freelance' },
+  { value: 'investment', label: '📈 Investment' },
+  { value: 'savings', label: '🏦 Savings' },
+  { value: 'other', label: '📦 Other' }
 ];
 
 function TransactionFilter({ filters, onFilterChange }) {
