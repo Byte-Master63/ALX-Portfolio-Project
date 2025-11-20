@@ -50,6 +50,16 @@ function TransactionItem({ transaction, onDelete, onEdit }) {
       travel: '✈️',
       pets: '🐾',
       subscriptions: '📱',
+      personal: '💇',
+      housing: '🏠',
+      insurance: '🛡️',
+      savings: '🏦',
+      debt: '💳',
+      fitness: '💪',
+      gifts: '🎁',
+      travel: '✈️',
+      pets: '🐾',
+      subscriptions: '📱',
       personal: '💇'
     };
     return icons[category] || '💰';

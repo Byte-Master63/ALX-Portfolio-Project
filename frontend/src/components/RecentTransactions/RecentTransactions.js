@@ -26,7 +26,17 @@ function RecentTransactions({ transactions, limit = 5 }) {
       salary: '💼',
       freelance: '💻',
       investment: '📈',
-      other: '📦'
+      other: '📦',
+      housing: '🏠',
+      insurance: '🛡️',
+      savings: '🏦',
+      debt: '💳',
+      fitness: '💪',
+      gifts: '🎁',
+      travel: '✈️',
+      pets: '🐾',
+      subscriptions: '📱',
+      personal: '💇'
     };
     return icons[category] || '💰';
   };
