@@ -8,20 +8,31 @@ import './TransactionForm.css';
 // Match backend categories exactly
 const CATEGORIES = {
   expense: [
-    { value: 'food', label: 'Food & Dining' },
-    { value: 'transport', label: 'Transportation' },
-    { value: 'entertainment', label: 'Entertainment' },
-    { value: 'utilities', label: 'Utilities' },
-    { value: 'healthcare', label: 'Healthcare' },
-    { value: 'shopping', label: 'Shopping' },
-    { value: 'education', label: 'Education' },
-    { value: 'other', label: 'Other' }
+    { value: 'food', label: '🍔 Food & Dining' },
+    { value: 'transport', label: '🚗 Transportation' },
+    { value: 'entertainment', label: '🎬 Entertainment' },
+    { value: 'utilities', label: '💡 Utilities' },
+    { value: 'healthcare', label: '⚕️ Healthcare' },
+    { value: 'shopping', label: '🛍️ Shopping' },
+    { value: 'education', label: '📚 Education' },
+    { value: 'housing', label: '🏠 Housing & Rent' },
+    { value: 'insurance', label: '🛡️ Insurance' },
+    { value: 'debt', label: '💳 Debt & Loans' },
+    { value: 'fitness', label: '💪 Fitness & Sports' },
+    { value: 'gifts', label: '🎁 Gifts & Donations' },
+    { value: 'travel', label: '✈️ Travel' },
+    { value: 'pets', label: '🐾 Pets' },
+    { value: 'subscriptions', label: '📱 Subscriptions' },
+    { value: 'personal', label: '💇 Personal Care' },
+    { value: 'other', label: '📦 Other' }
   ],
   income: [
-    { value: 'salary', label: 'Salary' },
-    { value: 'freelance', label: 'Freelance' },
-    { value: 'investment', label: 'Investment' },
-    { value: 'other', label: 'Other' }
+    { value: 'salary', label: '💼 Salary' },
+    { value: 'freelance', label: '💻 Freelance' },
+    { value: 'investment', label: '📈 Investment' },
+    { value: 'savings', label: '🏦 Savings Interest' },
+    { value: 'gifts', label: '🎁 Gifts Received' },
+    { value: 'other', label: '💰 Other Income' }
   ]
 };
 
