@@ -40,7 +40,17 @@ function TransactionItem({ transaction, onDelete, onEdit }) {
       salary: '💼',
       freelance: '💻',
       investment: '📈',
-      other: '📦'
+      other: '📦',
+      housing: '🏠',
+      insurance: '🛡️',
+      savings: '🏦',
+      debt: '💳',
+      fitness: '💪',
+      gifts: '🎁',
+      travel: '✈️',
+      pets: '🐾',
+      subscriptions: '📱',
+      personal: '💇'
     };
     return icons[category] || '💰';
   };
