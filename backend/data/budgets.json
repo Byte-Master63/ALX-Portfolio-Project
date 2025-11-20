@@ -1,14 +1,21 @@
 [
   {
-    "id": "mhuwi1l0-ebe8c6556290c73f",
-    "category": "transport",
-    "limit": 1500,
-    "createdAt": "2025-11-11T18:24:45.248Z"
+    "id": "mi565yt6-ddce91d1ed9ed6ae",
+    "category": "food",
+    "limit": 2000,
+    "createdAt": "2025-11-18T22:52:59.130Z"
   },
   {
-    "id": "mhuwjnyf-cf69900fdc563a76",
+    "id": "mi566arn-3a46dc37a06f17d0",
     "category": "entertainment",
     "limit": 500,
-    "createdAt": "2025-11-11T18:26:00.327Z"
+    "createdAt": "2025-11-18T22:53:14.627Z",
+    "updatedAt": "2025-11-18T22:54:05.348Z"
+  },
+  {
+    "id": "mi5670kg-216d7a4055085f62",
+    "category": "transport",
+    "limit": 1500,
+    "createdAt": "2025-11-18T22:53:48.099Z"
   }
 ]

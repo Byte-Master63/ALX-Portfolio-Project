@@ -12,7 +12,17 @@ const VALID_CATEGORIES = [
     'salary',
     'freelance',
     'investment',
-    'other'
+    'other',
+    'housing',        
+    'insurance',
+    'savings',
+    'debt',
+    'fitness',
+    'gifts',
+    'travel',
+    'pets', 
+    'subscriptions',
+    'personal'   
 ];
 
 // Define allowed transaction types
