@@ -3,19 +3,25 @@ import { formatCurrency, capitalize } from '../../utils/format';
 import { formatDate } from '../../utils/date';
 import Button from '../Button/Button';
 import TransactionEditModal from '../TransactionEditModal/TransactionEditModal';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import './TransactionItem.css';
+
 
 function TransactionItem({ transaction, onDelete, onEdit }) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this transaction?')) {
-      setIsDeleting(true);
-      await onDelete(transaction.id);
-      setIsDeleting(false);
-    }
-  };
+  setShowDeleteConfirm(true);
+};
+
+const confirmDelete = async () => {
+  setShowDeleteConfirm(false);
+  setIsDeleting(true);
+  await onDelete(transaction.id);
+  setIsDeleting(false);
+};
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -104,6 +110,17 @@ function TransactionItem({ transaction, onDelete, onEdit }) {
           onClose={() => setShowEditModal(false)}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title="Delete Transaction"
+        message={`Are you sure you want to delete "${transaction.description}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </>
   );
 }

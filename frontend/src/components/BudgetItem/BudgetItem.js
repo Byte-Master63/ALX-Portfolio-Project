@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { formatCurrency, capitalize, formatPercentage } from '../../utils/format';
 import Button from '../Button/Button';
 import BudgetEditModal from '../BudgetEditModal/BudgetEditModal';
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog';
 import './BudgetItem.css';
 
 function BudgetItem({ budget, onDelete, onEdit }) {
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Calculate from budgetStatus in summary
@@ -14,13 +16,16 @@ function BudgetItem({ budget, onDelete, onEdit }) {
   const percentage = budget.percentage || 0;
   const status = budget.status || 'good';
 
-  const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete the budget for ${budget.category}?`)) {
-      setIsDeleting(true);
-      await onDelete(budget.id);
-      setIsDeleting(false);
-    }
-  };
+const handleDelete = () => {
+  setShowDeleteConfirm(true);
+};
+
+const confirmDelete = async () => {
+  setShowDeleteConfirm(false);
+  setIsDeleting(true);
+  await onDelete(budget.id);
+  setIsDeleting(false);
+};
 
   const handleEdit = () => {
     setShowEditModal(true);
@@ -115,6 +120,17 @@ function BudgetItem({ budget, onDelete, onEdit }) {
           onClose={() => setShowEditModal(false)}
         />
       )}
+
+      <ConfirmDialog
+  isOpen={showDeleteConfirm}
+  title="Delete Budget"
+  message={`Are you sure you want to delete the budget for ${capitalize(budget.category)}?`}
+  confirmText="Delete"
+  cancelText="Cancel"
+  variant="danger"
+  onConfirm={confirmDelete}
+  onCancel={() => setShowDeleteConfirm(false)}
+/>
     </>
   );
 }
