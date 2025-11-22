@@ -7,7 +7,9 @@ function TransactionList({ transactions, onDelete, onEdit }) {
   const [filters, setFilters] = useState({
     type: '',
     category: '',
-    search: ''
+    search: '',
+    startDate: '',
+    endDate: ''  
   });
 
   // Apply filters
@@ -18,6 +20,13 @@ function TransactionList({ transactions, onDelete, onEdit }) {
       const searchLower = filters.search.toLowerCase();
       return transaction.description.toLowerCase().includes(searchLower);
     }
+
+    if (filters.startDate || filters.endDate) {
+      const transactionDate = new Date(transaction.date);
+      if (filters.startDate && transactionDate < new Date(filters.startDate)) return false;
+      if (filters.endDate && transactionDate > new Date(filters.endDate)) return false;
+    }
+    
     return true;
   });
 
