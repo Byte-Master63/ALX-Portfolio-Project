@@ -9,6 +9,8 @@ import BudgetList from '../../components/BudgetList/BudgetList';
 import CategoryChart from '../../components/CategoryChart/CategoryChart';
 import RecentTransactions from '../../components/RecentTransactions/RecentTransactions';
 import Loading from '../../components/Loading/Loading';
+import ExportButton from '../../components/ExportButton/ExportButton';
+import { exportBudgetsToCSV, exportSummaryToCSV } from '../../utils/export';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -47,6 +49,25 @@ function Dashboard() {
   if (loading && transactions.length === 0) {
     return <Loading message="Loading your financial data..." />;
   }
+
+  const handleExportBudgets = () => {
+  const dataToExport = (summary.budgetStatus || budgets).map(b => ({
+    category: b.category,
+    limit: b.limit,
+    spent: b.spent || 0,
+    remaining: b.remaining || b.limit,
+    percentage: b.percentage || 0,
+    status: b.status || 'good'
+  }));
+
+  const timestamp = new Date().toISOString().split('T')[0];
+  exportBudgetsToCSV(dataToExport, `budgets-${timestamp}.csv`);
+};
+
+const handleExportSummary = () => {
+  const timestamp = new Date().toISOString().split('T')[0];
+  exportSummaryToCSV(summary, `summary-${timestamp}.csv`);
+};
 
   return (
     <div className="dashboard">
@@ -89,6 +110,15 @@ function Dashboard() {
       {/* Tab Content */}
       <div className="dashboard-content">
         {activeTab === 'overview' && (
+          <>
+    <div className="dashboard-export-section">
+      <ExportButton 
+        onExport={handleExportSummary}
+        disabled={!summary.totalIncome && !summary.totalExpenses}
+      >
+        Export Summary
+      </ExportButton>
+    </div>
           <div className="overview-grid">
             <Card title="Recent Transactions" className="overview-card">
               <RecentTransactions transactions={transactions} limit={5} />
@@ -125,6 +155,15 @@ function Dashboard() {
         )}
 
         {activeTab === 'budgets' && (
+          <>
+    <div className="dashboard-export-section">
+      <ExportButton 
+        onExport={handleExportBudgets}
+        disabled={budgets.length === 0}
+      >
+        Export Budgets
+      </ExportButton>
+    </div>
           <div className="budgets-grid">
             <Card title="Create Budget" className="form-card">
               <BudgetForm />

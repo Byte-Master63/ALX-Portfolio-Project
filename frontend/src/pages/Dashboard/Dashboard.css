@@ -1,3 +1,9 @@
+.dashboard-export-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
 .dashboard {
   max-width: 1400px;
   margin: 0 auto;

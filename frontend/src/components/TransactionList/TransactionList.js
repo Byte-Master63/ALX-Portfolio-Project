@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import TransactionItem from '../TransactionItem/TransactionItem';
 import TransactionFilter from '../TransactionFilter/TransactionFilter';
+import ExportButton from '../ExportButton/ExportButton';
+import { exportTransactionsToCSV } from '../../utils/export';
 import './TransactionList.css';
 
 function TransactionList({ transactions, onDelete, onEdit }) {
@@ -26,12 +28,24 @@ function TransactionList({ transactions, onDelete, onEdit }) {
       if (filters.startDate && transactionDate < new Date(filters.startDate)) return false;
       if (filters.endDate && transactionDate > new Date(filters.endDate)) return false;
     }
-    
+
     return true;
   });
 
+  
+  
+
   return (
     <div className="transaction-list-container">
+      <div className="transaction-list-header">
+    <ExportButton 
+      onExport={handleExport}
+      disabled={filteredTransactions.length === 0}
+    >
+      Export to CSV
+    </ExportButton>
+  </div>
+  
       <TransactionFilter filters={filters} onFilterChange={setFilters} />
       
       {filteredTransactions.length === 0 ? (
@@ -65,5 +79,6 @@ function TransactionList({ transactions, onDelete, onEdit }) {
     </div>
   );
 }
+
 
 export default TransactionList;
