@@ -33,7 +33,7 @@ function ConfirmDialog({
 
       <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
 
-        <div className=confirm-icon ${variant}}>
+        <div className={`confirm-icon ${variant}`}>
 
           {variant === 'danger' && '⚠️'}
 
