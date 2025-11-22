@@ -1,4 +1,5 @@
 import React from 'react';
+import DateRangePicker from '../DateRangePicker/DateRangePicker';
 import './TransactionFilter.css';
 
 const CATEGORIES = [
@@ -31,34 +32,38 @@ function TransactionFilter({ filters, onFilterChange }) {
   };
 
   const handleClearFilters = () => {
-    onFilterChange({ type: '', category: '', search: '' });
+    onFilterChange({ type: '', category: '', search: '', startDate: '', endDate: '' });
   };
 
-  const hasActiveFilters = filters.type || filters.category || filters.search;
+  const handleClearDates = () => {
+    onFilterChange({ ...filters, startDate: '', endDate: '' });
+  };
+
+  const hasActiveFilters = filters.type || filters.category || filters.search || filters.startDate || filters.endDate;
 
   return (
     <div className="transaction-filter">
-      <div className="filter-inputs">
+      <div className="filter-row">
         <input
           type="text"
-          placeholder="Search transactions..."
-          value={filters.search}
+          placeholder="🔍 Search transactions..."
+          value={filters.search || ''}
           onChange={(e) => handleChange('search', e.target.value)}
           className="filter-search"
         />
         
         <select
-          value={filters.type}
+          value={filters.type || ''}
           onChange={(e) => handleChange('type', e.target.value)}
           className="filter-select"
         >
           <option value="">All Types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
+          <option value="income">💰 Income</option>
+          <option value="expense">💸 Expense</option>
         </select>
         
         <select
-          value={filters.category}
+          value={filters.category || ''}
           onChange={(e) => handleChange('category', e.target.value)}
           className="filter-select"
         >
@@ -68,10 +73,20 @@ function TransactionFilter({ filters, onFilterChange }) {
           ))}
         </select>
       </div>
+
+      <div className="filter-row">
+        <DateRangePicker
+          startDate={filters.startDate || ''}
+          endDate={filters.endDate || ''}
+          onStartDateChange={(date) => handleChange('startDate', date)}
+          onEndDateChange={(date) => handleChange('endDate', date)}
+          onClear={handleClearDates}
+        />
+      </div>
       
       {hasActiveFilters && (
         <button className="filter-clear" onClick={handleClearFilters}>
-          Clear Filters
+          ✕ Clear All Filters
         </button>
       )}
     </div>
