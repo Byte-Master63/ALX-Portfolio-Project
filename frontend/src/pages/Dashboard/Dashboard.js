@@ -46,28 +46,28 @@ function Dashboard() {
     return result.success;
   };
 
+  const handleExportBudgets = () => {
+    const dataToExport = (summary.budgetStatus || budgets).map(b => ({
+      category: b.category,
+      limit: b.limit,
+      spent: b.spent || 0,
+      remaining: b.remaining || b.limit,
+      percentage: b.percentage || 0,
+      status: b.status || 'good'
+    }));
+
+    const timestamp = new Date().toISOString().split('T')[0];
+    exportBudgetsToCSV(dataToExport, `budgets-${timestamp}.csv`);
+  };
+
+  const handleExportSummary = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    exportSummaryToCSV(summary, `summary-${timestamp}.csv`);
+  };
+
   if (loading && transactions.length === 0) {
     return <Loading message="Loading your financial data..." />;
   }
-
-  const handleExportBudgets = () => {
-  const dataToExport = (summary.budgetStatus || budgets).map(b => ({
-    category: b.category,
-    limit: b.limit,
-    spent: b.spent || 0,
-    remaining: b.remaining || b.limit,
-    percentage: b.percentage || 0,
-    status: b.status || 'good'
-  }));
-
-  const timestamp = new Date().toISOString().split('T')[0];
-  exportBudgetsToCSV(dataToExport, `budgets-${timestamp}.csv`);
-};
-
-const handleExportSummary = () => {
-  const timestamp = new Date().toISOString().split('T')[0];
-  exportSummaryToCSV(summary, `summary-${timestamp}.csv`);
-};
 
   return (
     <div className="dashboard">
@@ -110,31 +110,33 @@ const handleExportSummary = () => {
       {/* Tab Content */}
       <div className="dashboard-content">
         {activeTab === 'overview' && (
-          <>
-    <div className="dashboard-export-section">
-      <ExportButton 
-        onExport={handleExportSummary}
-        disabled={!summary.totalIncome && !summary.totalExpenses}
-      >
-        Export Summary
-      </ExportButton>
-    </div>
-          <div className="overview-grid">
-            <Card title="Recent Transactions" className="overview-card">
-              <RecentTransactions transactions={transactions} limit={5} />
-            </Card>
+          <div>
+            <div className="dashboard-export-section">
+              <ExportButton 
+                onExport={handleExportSummary}
+                disabled={!summary.totalIncome && !summary.totalExpenses}
+              >
+                Export Summary
+              </ExportButton>
+            </div>
+            
+            <div className="overview-grid">
+              <Card title="Recent Transactions" className="overview-card">
+                <RecentTransactions transactions={transactions} limit={5} />
+              </Card>
 
-            <Card title="Expense Breakdown" className="overview-card">
-              <CategoryChart data={summary.spendingByCategory} type="expense" />
-            </Card>
+              <Card title="Expense Breakdown" className="overview-card">
+                <CategoryChart data={summary.spendingByCategory} type="expense" />
+              </Card>
 
-            <Card title="Income Sources" className="overview-card">
-              <CategoryChart data={summary.incomeByCategory} type="income" />
-            </Card>
+              <Card title="Income Sources" className="overview-card">
+                <CategoryChart data={summary.incomeByCategory} type="income" />
+              </Card>
 
-            <Card title="Quick Add Transaction" className="overview-card">
-              <TransactionForm />
-            </Card>
+              <Card title="Quick Add Transaction" className="overview-card">
+                <TransactionForm />
+              </Card>
+            </div>
           </div>
         )}
 
@@ -155,27 +157,29 @@ const handleExportSummary = () => {
         )}
 
         {activeTab === 'budgets' && (
-          <>
-    <div className="dashboard-export-section">
-      <ExportButton 
-        onExport={handleExportBudgets}
-        disabled={budgets.length === 0}
-      >
-        Export Budgets
-      </ExportButton>
-    </div>
-          <div className="budgets-grid">
-            <Card title="Create Budget" className="form-card">
-              <BudgetForm />
-            </Card>
+          <div>
+            <div className="dashboard-export-section">
+              <ExportButton 
+                onExport={handleExportBudgets}
+                disabled={budgets.length === 0}
+              >
+                Export Budgets
+              </ExportButton>
+            </div>
+            
+            <div className="budgets-grid">
+              <Card title="Create Budget" className="form-card">
+                <BudgetForm />
+              </Card>
 
-            <Card title="Your Budgets" className="list-card">
-              <BudgetList
-                budgets={summary.budgetStatus || budgets}
-                onDelete={handleDeleteBudget}
-                onEdit={handleEditBudget}
-              />
-            </Card>
+              <Card title="Your Budgets" className="list-card">
+                <BudgetList
+                  budgets={summary.budgetStatus || budgets}
+                  onDelete={handleDeleteBudget}
+                  onEdit={handleEditBudget}
+                />
+              </Card>
+            </div>
           </div>
         )}
       </div>
