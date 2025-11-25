@@ -5,6 +5,7 @@ import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import Profile from './pages/Profile/Profile';
 import NotFound from './pages/NotFound/NotFound';
 import './App.css';
 
@@ -30,6 +31,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Profile Route */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
 
         {/* Redirect /dashboard to / */}
         <Route path="/dashboard" element={<Navigate to="/" replace />} />
