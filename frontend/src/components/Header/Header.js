@@ -36,17 +36,23 @@ function Header() {
             </button>
 
             {showDropdown && (
-              <div className="dropdown-menu">
-                <div className="dropdown-header">
-                  <p className="dropdown-name">{user?.name}</p>
-                  <p className="dropdown-email">{user?.email}</p>
-                </div>
-                <div className="dropdown-divider"></div>
-                <button className="dropdown-item" onClick={handleLogout}>
-                  <span className="dropdown-icon">🚪</span>
-                  Logout
-                </button>
-              </div>
+                  <div className="dropdown-menu">
+                    <div className="dropdown-header">
+                      <p className="dropdown-name">{user?.name}</p>
+                      <p className="dropdown-email">{user?.email}</p>
+                    </div>
+                    <div className="dropdown-divider"></div>
+                    <Link to="/profile" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                      <span className="dropdown-icon">👤</span>
+                      Profile
+                    </Link>
+                    <div className="dropdown-divider"></div>
+                    <button className="dropdown-item" onClick={handleLogout}>
+                      <span className="dropdown-icon">🚪</span>
+                      Logout
+                    </button>
+                  </div>
+                )}
             )}
           </div>
         </nav>

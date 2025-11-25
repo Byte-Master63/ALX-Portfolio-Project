@@ -151,6 +151,7 @@
   color: #333;
   transition: background 0.2s;
   text-align: left;
+  text-decoration: none;
 }
 
 .dropdown-item:hover {
