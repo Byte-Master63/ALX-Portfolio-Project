@@ -53,7 +53,6 @@ function Header() {
                     </button>
                   </div>
                 )}
-            )}
           </div>
         </nav>
       </div>
