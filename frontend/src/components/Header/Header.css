@@ -1,47 +1,143 @@
+/* ============================================
+   MODERN HEADER COMPONENT
+   ============================================ */
+
 .header {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 .header-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px;
+  height: 70px;
+  gap: 24px;
 }
+
+/* ============================================
+   LOGO
+   ============================================ */
 
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  color: #333;
-  font-size: 20px;
+  color: var(--text-primary);
+  font-size: 22px;
   font-weight: 700;
+  transition: opacity 0.3s ease;
+}
+
+.header-logo:hover {
+  opacity: 0.8;
 }
 
 .logo-icon {
-  font-size: 28px;
+  font-size: 32px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .logo-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* ============================================
+   DESKTOP NAVIGATION
+   ============================================ */
+
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 8px;
+  flex: 1;
 }
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+  background: var(--bg-hover);
+}
+
+.nav-link.active {
+  color: var(--primary);
+  background: var(--primary-light);
+  background: linear-gradient(135deg, var(--primary-light) 0%, transparent 100%);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 2px 2px 0 0;
+}
+
+.nav-icon {
+  font-size: 18px;
+}
+
+/* ============================================
+   HEADER ACTIONS
+   ============================================ */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-tertiary);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-hover);
+  transform: rotate(20deg) scale(1.1);
+}
+
+/* ============================================
+   USER MENU (DESKTOP)
+   ============================================ */
 
 .user-menu {
   position: relative;
@@ -50,91 +146,103 @@
 .user-button {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: none;
+  gap: 12px;
+  background: var(--bg-tertiary);
   border: none;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background 0.3s;
+  padding: 8px 16px 8px 8px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
 }
 
 .user-button:hover {
-  background: #f5f5f5;
+  background: var(--bg-hover);
+  transform: translateY(-2px);
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: var(--shadow-md);
 }
 
 .user-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dropdown-arrow {
   font-size: 10px;
-  color: #666;
-  transition: transform 0.3s;
+  color: var(--text-tertiary);
+  transition: transform 0.3s ease;
 }
 
 .dropdown-arrow.open {
   transform: rotate(180deg);
 }
 
-.dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
+/* Dropdown Backdrop */
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
   right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  min-width: 220px;
-  animation: dropdownSlide 0.2s ease;
-  z-index: 1001;
+  bottom: 0;
+  z-index: 999;
 }
 
-@keyframes dropdownSlide {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-xl);
+  min-width: 240px;
+  animation: slideUp 0.2s ease;
+  z-index: 1000;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
 }
 
 .dropdown-header {
-  padding: 16px;
+  padding: 20px;
+  background: var(--bg-tertiary);
 }
 
 .dropdown-name {
   margin: 0 0 4px;
   font-weight: 600;
-  font-size: 14px;
-  color: #333;
+  font-size: 16px;
+  color: var(--text-primary);
 }
 
 .dropdown-email {
   margin: 0;
-  font-size: 12px;
-  color: #666;
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dropdown-divider {
   height: 1px;
-  background: #f0f0f0;
+  background: var(--border-color);
   margin: 8px 0;
 }
 
@@ -142,36 +250,243 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
+  gap: 12px;
+  padding: 14px 20px;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  transition: background 0.2s;
+  font-size: 15px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
   text-align: left;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .dropdown-item:hover {
-  background: #f5f5f5;
+  background: var(--bg-hover);
 }
 
 .dropdown-icon {
-  font-size: 16px;
+  font-size: 18px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media (max-width: 768px) {
-  .user-name {
+/* ============================================
+   MOBILE MENU
+   ============================================ */
+
+.mobile-menu-button {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-tertiary);
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-button:hover {
+  background: var(--bg-hover);
+}
+
+.mobile-backdrop {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  animation: fadeIn 0.3s ease;
+}
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 70px;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-xl);
+  z-index: 999;
+  animation: slideInRight 0.3s ease;
+  overflow-y: auto;
+  border-left: 1px solid var(--border-color);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mobile-nav-header {
+  padding: 24px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.mobile-user-name {
+  margin: 0 0 4px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.mobile-user-email {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-nav-links {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+  color: var(--primary);
+  background: var(--bg-hover);
+}
+
+.mobile-nav-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.mobile-logout-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--danger-light);
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-logout-button:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Desktop Only */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Tablet & Mobile */
+@media (max-width: 968px) {
+  .desktop-nav {
     display: none;
   }
-  
-  .header-logo {
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+
+  .mobile-backdrop,
+  .mobile-nav {
+    display: block;
+  }
+
+  .header-container {
+    padding: 0 16px;
+    height: 64px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .logo-icon {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 12px;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
     font-size: 18px;
   }
-  
-  .logo-icon {
-    font-size: 24px;
+
+  .mobile-menu-button {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
   }
 }

@@ -1,170 +1,245 @@
-/* Layout */
+/* ============================================
+   MODERN DASHBOARD
+   ============================================ */
+
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  animation: fadeIn 0.5s ease;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.dashboard-subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.dashboard-error {
+  background: var(--danger-light);
+  color: var(--danger);
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--danger);
+  animation: slideIn 0.3s ease;
+}
+
+.dashboard-error p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+.dashboard-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--border-color);
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.dashboard-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-button {
+  padding: 14px 24px;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  position: relative;
+}
+
+.tab-button::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  border-radius: 2px 2px 0 0;
+}
+
+.tab-button:hover {
+  color: var(--primary);
+  background: var(--bg-hover);
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-button.active {
+  color: var(--primary);
+}
+
+.tab-button.active::before {
+  transform: scaleX(1);
+}
+
+/* ============================================
+   DASHBOARD CONTENT
+   ============================================ */
+
+.dashboard-content {
+  animation: fadeIn 0.4s ease;
+}
+
+/* Export Section */
 .dashboard-export-section {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 24px;
 }
 
-.dashboard {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
+/* ============================================
+   OVERVIEW GRID
+   ============================================ */
 
-/* Header */
-.dashboard-header {
-  margin-bottom: 32px;
-}
-
-.dashboard-header h1 {
-  margin: 0 0 6px;
-  font-size: 30px;
-  font-weight: 700;
-  color: #2b2b2b;
-}
-
-.dashboard-subtitle {
-  margin: 0;
-  font-size: 15px;
-  color: #777;
-}
-
-/* Error Box */
-.dashboard-error {
-  background: #ffeaed;
-  color: #b71c1c;
-  padding: 14px 18px;
-  border-radius: 10px;
-  margin-bottom: 24px;
-  border-left: 4px solid #ef5350;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.dashboard-error p {
-  margin: 0;
-}
-
-/* Tabs */
-.dashboard-tabs {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 28px;
-  border-bottom: 2px solid #eee;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.tab-button {
-  padding: 12px 22px;
-  background: none;
-  border: none;
-  font-size: 15px;
-  font-weight: 500;
-  color: #666;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-}
-
-.tab-button:hover {
-  color: #5a6ff0;
-}
-
-.tab-button.active {
-  color: #5a6ff0;
-  border-bottom-color: #5a6ff0;
-}
-
-/* Content Animation */
-.dashboard-content {
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Overview Grid */
 .overview-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+  gap: 24px;
 }
 
 .overview-card {
-  min-height: 300px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  min-height: 350px;
 }
 
-/* Transactions Grid */
+/* ============================================
+   TRANSACTIONS GRID
+   ============================================ */
+
 .transactions-grid {
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 28px;
+  grid-template-columns: 400px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-/* Sticky card */
 .form-card {
-  height: fit-content;
   position: sticky;
-  top: 84px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  top: 94px;
 }
 
-/* Budgets Grid */
+/* ============================================
+   BUDGETS GRID
+   ============================================ */
+
 .budgets-grid {
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 28px;
+  grid-template-columns: 400px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
   .overview-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .transactions-grid,
   .budgets-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .form-card {
     position: static;
-    top: unset;
   }
 }
 
+/* Mobile (768px and below) */
 @media (max-width: 768px) {
   .dashboard {
-    padding: 20px;
+    padding: 24px 16px;
   }
+  
+  .dashboard-header h1 {
+    font-size: 28px;
+  }
+  
+  .dashboard-subtitle {
+    font-size: 15px;
+  }
+  
+  .dashboard-tabs {
+    gap: 4px;
+  }
+  
+  .tab-button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .overview-card {
+    min-height: 300px;
+  }
+}
 
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 20px 12px;
+  }
+  
   .dashboard-header h1 {
     font-size: 24px;
   }
-
-  .dashboard-tabs {
-    gap: 8px;
-  }
-
-  .tab-button {
-    padding: 10px 14px;
+  
+  .dashboard-subtitle {
     font-size: 14px;
+  }
+  
+  .tab-button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .overview-grid,
+  .transactions-grid,
+  .budgets-grid {
+    gap: 16px;
   }
 }
 
+/* Ultra-wide screens */
+@media (min-width: 1600px) {
+  .dashboard {
+    padding: 48px 32px;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 42px;
+  }
+}

@@ -1,81 +1,120 @@
+/* ============================================
+   GLOBAL APP STYLES
+   ============================================ */
+
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
+  background: var(--bg-secondary);
+  transition: background-color 0.3s ease;
 }
 
 .app main {
   flex: 1;
-  padding-top: 20px;
+  padding-top: 0;
 }
 
-/* Form Groups - Global Form Styling */
+/* ============================================
+   FORM GROUPS - GLOBAL
+   ============================================ */
+
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 14px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
   font-size: 14px;
-  transition: border-color 0.3s;
-  background: white;
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--primary);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 
 .form-group input:disabled,
 .form-group select:disabled,
 .form-group textarea:disabled {
-  background: #f5f5f5;
+  background: var(--bg-tertiary);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.form-group small {
+.form-group input::placeholder,
+.form-group select::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.form-group small,
+.form-hint {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .form-group .error-message {
-  color: #f44336;
+  color: var(--danger);
   font-size: 12px;
   margin-top: 4px;
+  font-weight: 600;
 }
 
-/* Loading States */
+/* Select Styling */
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
 .loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  animation: fadeIn 0.3s ease;
 }
 
-/* Error States */
+/* ============================================
+   ERROR STATES
+   ============================================ */
+
 .error-boundary {
   min-height: 100vh;
   display: flex;
@@ -83,26 +122,28 @@
   justify-content: center;
   padding: 20px;
   text-align: center;
+  background: var(--bg-secondary);
 }
 
 .error-boundary h1 {
-  color: #f44336;
+  color: var(--danger);
   margin-bottom: 16px;
+  font-size: 32px;
 }
 
 .error-boundary p {
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 24px;
+  font-size: 16px;
 }
 
-/* Animations */
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideIn {
@@ -127,7 +168,15 @@
   }
 }
 
-/* Accessibility */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -140,12 +189,75 @@
   border-width: 0;
 }
 
-/* Focus Visible */
 *:focus-visible {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
 button:focus-visible {
   outline-offset: 4px;
+}
+
+/* ============================================
+   SCROLLBAR (for content areas)
+   ============================================ */
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .header,
+  .dashboard-tabs,
+  button,
+  .no-print {
+    display: none !important;
+  }
+  
+  .card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
 }
