@@ -1,62 +1,61 @@
-/* --- General Layout --- */
-.dashboard {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px 20px;
-}
-
-/* --- Header --- */
-.dashboard-header {
-  margin-bottom: 32px;
-}
-
-.dashboard-header h1 {
-  margin: 0 0 8px;
-  font-size: 32px;
-  font-weight: 700;
-  color: #333;
-}
-
-.dashboard-subtitle {
-  margin: 0;
-  font-size: 16px;
-  color: #666;
-}
-
-/* --- Export Section --- */
+/* Layout */
 .dashboard-export-section {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 24px;
 }
 
-/* --- Error Message --- */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 6px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #2b2b2b;
+}
+
+.dashboard-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: #777;
+}
+
+/* Error Box */
 .dashboard-error {
-  background: #ffebee;
-  color: #c62828;
+  background: #ffeaed;
+  color: #b71c1c;
   padding: 14px 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 24px;
-  border-left: 4px solid #f44336;
+  border-left: 4px solid #ef5350;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .dashboard-error p {
   margin: 0;
 }
 
-/* --- Tabs --- */
+/* Tabs */
 .dashboard-tabs {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   margin-bottom: 28px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid #eee;
   overflow-x: auto;
-  padding-bottom: 2px;
-  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
 }
 
 .tab-button {
-  padding: 12px 24px;
+  padding: 12px 22px;
   background: none;
   border: none;
   font-size: 15px;
@@ -66,53 +65,79 @@
   transition: all 0.25s ease;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
-  scroll-snap-align: start;
 }
 
-.tab-button:hover,
+.tab-button:hover {
+  color: #5a6ff0;
+}
+
 .tab-button.active {
-  color: #667eea;
-  border-bottom-color: #667eea;
+  color: #5a6ff0;
+  border-bottom-color: #5a6ff0;
 }
 
-/* --- Fade-In Animation --- */
+/* Content Animation */
 .dashboard-content {
   animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* --- Overview Grid (auto responsive) --- */
+/* Overview Grid */
 .overview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
 }
 
 .overview-card {
-  min-height: 260px;
+  min-height: 300px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-/* --- Transactions & Budgets Grid --- */
-.transactions-grid,
-.budgets-grid {
+/* Transactions Grid */
+.transactions-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: 380px 1fr;
+  gap: 28px;
 }
 
+/* Sticky card */
 .form-card {
+  height: fit-content;
   position: sticky;
   top: 84px;
-  height: fit-content;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-/* --- Responsive Breakpoints --- */
-@media (max-width: 1024px) {
+/* Budgets Grid */
+.budgets-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 28px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
   .transactions-grid,
   .budgets-grid {
     grid-template-columns: 1fr;
@@ -120,16 +145,17 @@
 
   .form-card {
     position: static;
+    top: unset;
   }
 }
 
 @media (max-width: 768px) {
   .dashboard {
-    padding: 20px 14px;
+    padding: 20px;
   }
 
   .dashboard-header h1 {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .dashboard-tabs {
@@ -137,18 +163,8 @@
   }
 
   .tab-button {
-    padding: 10px 16px;
+    padding: 10px 14px;
     font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-header h1 {
-    font-size: 22px;
-  }
-
-  .overview-card {
-    min-height: 220px;
   }
 }
 
