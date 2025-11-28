@@ -1,136 +1,181 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
-import { FinanceContext } from '../../contexts/FinanceContext';
-import Card from '../../components/Card/Card';
-import Button from '../../components/Button/Button';
-import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog';
-import './Profile.css';
+const fs = require('fs').promises;
+const { USERS_FILE } = require('../config/database');
 
-function Profile() {
-  const { user, logout } = useContext(AuthContext);
-  const { transactions, budgets, summary } = useContext(FinanceContext);
-  const navigate = useNavigate();
-  const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
+// Write locks to prevent race conditions
+const writeLock = { locked: false };
 
-  const handleLogout = () => {
-    setShowLogoutConfirm(true);
-  };
-
-  const confirmLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  return (
-    <div className="profile-page">
-      <div className="profile-header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          ← Back to Dashboard
-        </button>
-      </div>
-
-      <div className="profile-content">
-        <Card title="Account Information">
-          <div className="profile-info">
-            <div className="profile-avatar">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
-            </div>
-            
-            <div className="profile-details">
-              <div className="profile-field">
-                <label>Full Name</label>
-                <p>{user?.name || 'N/A'}</p>
-              </div>
-
-              <div className="profile-field">
-                <label>Email Address</label>
-                <p>{user?.email || 'N/A'}</p>
-              </div>
-
-              <div className="profile-field">
-                <label>Member Since</label>
-                <p>{user?.createdAt ? formatDate(user.createdAt) : 'N/A'}</p>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <Card title="Account Statistics">
-          <div className="profile-stats">
-            <div className="stat-item">
-              <div className="stat-icon">💳</div>
-              <div className="stat-details">
-                <p className="stat-label">Total Transactions</p>
-                <p className="stat-value">{transactions.length}</p>
-              </div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-icon">📊</div>
-              <div className="stat-details">
-                <p className="stat-label">Active Budgets</p>
-                <p className="stat-value">{budgets.length}</p>
-              </div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-icon">💰</div>
-              <div className="stat-details">
-                <p className="stat-label">Current Balance</p>
-                <p className="stat-value">
-                  R{(summary.balance || 0).toLocaleString('en-ZA', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
-                </p>
-              </div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-icon">📈</div>
-              <div className="stat-details">
-                <p className="stat-label">Total Income</p>
-                <p className="stat-value">
-                  R{(summary.totalIncome || 0).toLocaleString('en-ZA', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  })}
-                </p>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <Card title="Account Actions">
-          <div className="profile-actions">
-            <Button variant="danger" onClick={handleLogout}>
-              🚪 Logout
-            </Button>
-          </div>
-        </Card>
-      </div>
-
-      <ConfirmDialog
-        isOpen={showLogoutConfirm}
-        title="Logout"
-        message="Are you sure you want to logout?"
-        confirmText="Logout"
-        cancelText="Cancel"
-        variant="warning"
-        onConfirm={confirmLogout}
-        onCancel={() => setShowLogoutConfirm(false)}
-      />
-    </div>
-  );
+/**
+ * Read all users from storage
+ * @returns {Promise<Array>} Array of user objects
+ */
+async function readUsers() {
+    try {
+        const fileContent = await fs.readFile(USERS_FILE, 'utf8');
+        const parsed = JSON.parse(fileContent);
+        
+        if (!Array.isArray(parsed)) {
+            console.error('Error: users file contains non-array data, returning empty array');
+            return [];
+        }
+        
+        return parsed;
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            console.warn('Users file not found, returning empty array');
+            return [];
+        }
+        
+        console.error(`Error reading users from ${USERS_FILE}:`, error.message);
+        throw new Error(`Failed to read users: ${error.message}`);
+    }
 }
 
-export default Profile;
+/**
+ * Write users to storage
+ * @param {Array} data - Array of user objects
+ * @returns {Promise<void>}
+ */
+async function writeUsers(data) {
+    if (!Array.isArray(data)) {
+        throw new Error('Users data must be an array');
+    }
+    
+    // Acquire write lock
+    while (writeLock.locked) {
+        await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    writeLock.locked = true;
+    
+    try {
+        // Write to temporary file first (atomic write)
+        const tempPath = `${USERS_FILE}.tmp`;
+        await fs.writeFile(tempPath, JSON.stringify(data, null, 2), 'utf8');
+        
+        // Rename temp file to actual file (atomic operation)
+        await fs.rename(tempPath, USERS_FILE);
+        
+        console.log(`✅ Users saved successfully (${data.length} users)`);
+    } catch (error) {
+        console.error(`Error writing users to ${USERS_FILE}:`, error.message);
+        throw new Error(`Failed to write users: ${error.message}`);
+    } finally {
+        // Release write lock
+        writeLock.locked = false;
+    }
+}
+
+/**
+ * Find a user by email
+ * @param {string} email - User email
+ * @returns {Promise<Object|null>} User object or null
+ */
+async function findUserByEmail(email) {
+    const users = await readUsers();
+    return users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+}
+
+/**
+ * Find a user by ID
+ * @param {string} userId - User ID
+ * @returns {Promise<Object|null>} User object or null
+ */
+async function findUserById(userId) {
+    const users = await readUsers();
+    return users.find(u => u.id === userId) || null;
+}
+
+/**
+ * Create a new user
+ * @param {Object} userData - User data
+ * @returns {Promise<Object>} Created user object
+ */
+async function createUser(userData) {
+    const users = await readUsers();
+    users.push(userData);
+    await writeUsers(users);
+    return userData;
+}
+
+/**
+ * Update an existing user
+ * @param {string} userId - User ID
+ * @param {Object} updateData - Updated user data
+ * @returns {Promise<Object>} Updated user object
+ */
+async function updateUser(userId, updateData) {
+    const users = await readUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+        throw new Error('User not found');
+    }
+    
+    // Update user while preserving ID and createdAt
+    users[userIndex] = {
+        ...updateData,
+        id: users[userIndex].id,
+        createdAt: users[userIndex].createdAt
+    };
+    
+    await writeUsers(users);
+    return users[userIndex];
+}
+
+/**
+ * Delete a user
+ * @param {string} userId - User ID
+ * @returns {Promise<Object>} Deleted user object
+ */
+async function deleteUser(userId) {
+    const users = await readUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+        throw new Error('User not found');
+    }
+    
+    const deletedUser = users.splice(userIndex, 1)[0];
+    await writeUsers(users);
+    return deletedUser;
+}
+
+/**
+ * Get all users (admin function - use with caution)
+ * @returns {Promise<Array>} Array of user objects (without passwords)
+ */
+async function getAllUsers() {
+    const users = await readUsers();
+    return users.map(({ password, ...user }) => user);
+}
+
+/**
+ * Check if email exists
+ * @param {string} email - Email to check
+ * @returns {Promise<boolean>} True if email exists
+ */
+async function emailExists(email) {
+    const user = await findUserByEmail(email);
+    return !!user;
+}
+
+/**
+ * Get user count
+ * @returns {Promise<number>} Number of registered users
+ */
+async function getUserCount() {
+    const users = await readUsers();
+    return users.length;
+}
+
+module.exports = {
+    readUsers,
+    writeUsers,
+    findUserByEmail,
+    findUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+    getAllUsers,
+    emailExists,
+    getUserCount
+};
