@@ -1,4 +1,5 @@
 const { isValidDate, sanitizeInput } = require('../services/utils');
+const { sanitizeInput } = require('../services/utils');
 
 // Define allowed categories
 const VALID_CATEGORIES = [
@@ -171,8 +172,6 @@ function validateBudgetMiddleware(req, res, next) {
     next();
 }
 
-// ... existing code ...
-
 /**
  * Validates registration data
  * @param {Object} data - Registration data
@@ -281,15 +280,79 @@ function validateLoginMiddleware(req, res, next) {
     next();
 }
 
+/**
+ * Validates profile update data
+ * @param {Object} data - Profile update data
+ * @returns {Object} Validation result
+ */
+function validateProfileUpdate(data) {
+    const errors = [];
+    
+    // Validate name (optional, but if provided must be valid)
+    if (data.name !== undefined && data.name !== null) {
+        const name = sanitizeInput(data.name);
+        if (name.length > 0 && name.length < 2) {
+            errors.push('Name must be at least 2 characters long');
+        } else if (name.length > 100) {
+            errors.push('Name must not exceed 100 characters');
+        }
+    }
+    
+    // If changing password, validate all password fields
+    if (data.newPassword) {
+        // Current password required
+        if (!data.currentPassword) {
+            errors.push('Current password is required to change password');
+        }
+        
+        // New password validation
+        if (data.newPassword.length < 6) {
+            errors.push('New password must be at least 6 characters long');
+        } else if (data.newPassword.length > 100) {
+            errors.push('New password must not exceed 100 characters');
+        }
+    }
+    
+    // If current password provided without new password
+    if (data.currentPassword && !data.newPassword) {
+        errors.push('New password is required when current password is provided');
+    }
+    
+    return {
+        isValid: errors.length === 0,
+        errors
+    };
+}
+
+/**
+ * Middleware to validate profile update in request body
+ */
+function validateProfileUpdateMiddleware(req, res, next) {
+    const validation = validateProfileUpdate(req.body);
+    
+    if (!validation.isValid) {
+        return res.status(400).json({
+            success: false,
+            message: 'Validation failed',
+            errors: validation.errors
+        });
+    }
+    
+    next();
+}
+
+
 module.exports = {
     validateTransaction,
     validateBudget,
     validateTransactionMiddleware,
     validateBudgetMiddleware,
-    validateRegistration,        // NEW
-    validateLogin,              // NEW
-    validateRegistrationMiddleware,  // NEW
-    validateLoginMiddleware,    // NEW
+    validateRegistration,
+    validateLogin,
+    validateRegistrationMiddleware,
+    validateLoginMiddleware,
+    validateProfileUpdate,
+    validateProfileUpdateMiddleware,
     VALID_CATEGORIES,
     TRANSACTION_TYPES
 };
