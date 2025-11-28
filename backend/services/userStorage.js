@@ -96,10 +96,86 @@ async function createUser(userData) {
     return userData;
 }
 
+/**
+ * Update an existing user
+ * @param {string} userId - User ID
+ * @param {Object} updateData - Updated user data
+ * @returns {Promise<Object>} Updated user object
+ */
+async function updateUser(userId, updateData) {
+    const users = await readUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+        throw new Error('User not found');
+    }
+    
+    // Update user while preserving ID and createdAt
+    users[userIndex] = {
+        ...updateData,
+        id: users[userIndex].id,
+        createdAt: users[userIndex].createdAt
+    };
+    
+    await writeUsers(users);
+    return users[userIndex];
+}
+
+/**
+ * Delete a user
+ * @param {string} userId - User ID
+ * @returns {Promise<Object>} Deleted user object
+ */
+async function deleteUser(userId) {
+    const users = await readUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+        throw new Error('User not found');
+    }
+    
+    const deletedUser = users.splice(userIndex, 1)[0];
+    await writeUsers(users);
+    return deletedUser;
+}
+
+/**
+ * Get all users (admin function - use with caution)
+ * @returns {Promise<Array>} Array of user objects (without passwords)
+ */
+async function getAllUsers() {
+    const users = await readUsers();
+    return users.map(({ password, ...user }) => user);
+}
+
+/**
+ * Check if email exists
+ * @param {string} email - Email to check
+ * @returns {Promise<boolean>} True if email exists
+ */
+async function emailExists(email) {
+    const user = await findUserByEmail(email);
+    return !!user;
+}
+
+/**
+ * Get user count
+ * @returns {Promise<number>} Number of registered users
+ */
+async function getUserCount() {
+    const users = await readUsers();
+    return users.length;
+}
+
 module.exports = {
     readUsers,
     writeUsers,
     findUserByEmail,
     findUserById,
-    createUser
+    createUser,
+    updateUser,
+    deleteUser,
+    getAllUsers,
+    emailExists,
+    getUserCount
 };
