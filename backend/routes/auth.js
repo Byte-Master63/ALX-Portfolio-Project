@@ -4,12 +4,15 @@ const {
     register,
     login,
     getProfile,
+    updateProfile,
+    deleteAccount,
     verifyToken
 } = require('../controllers/auth');
 const { auth } = require('../middleware/auth');
 const { 
     validateRegistrationMiddleware, 
-    validateLoginMiddleware 
+    validateLoginMiddleware,
+    validateProfileUpdateMiddleware
 } = require('../middleware/validators');
 const { asyncHandler } = require('../middleware/errorHandler');
 
@@ -33,6 +36,20 @@ router.post('/login', validateLoginMiddleware, asyncHandler(login));
  * @access  Private (requires token)
  */
 router.get('/profile', auth, asyncHandler(getProfile));
+
+/**
+ * @route   PUT /api/auth/profile
+ * @desc    Update user profile (name, password)
+ * @access  Private (requires token)
+ */
+router.put('/profile', auth, validateProfileUpdateMiddleware, asyncHandler(updateProfile));
+
+/**
+ * @route   DELETE /api/auth/profile
+ * @desc    Delete user account
+ * @access  Private (requires token)
+ */
+router.delete('/profile', auth, asyncHandler(deleteAccount));
 
 /**
  * @route   GET /api/auth/verify
