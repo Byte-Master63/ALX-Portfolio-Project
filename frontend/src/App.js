@@ -33,14 +33,19 @@ function App() {
         />
 
         {/* Profile Route */}
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+       <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <>
+                <Header />
+                <main className="container">
+                  <Profile />
+                </main>
+              </>
+            </ProtectedRoute>
+          }
+        />
 
         {/* Redirect /dashboard to / */}
         <Route path="/dashboard" element={<Navigate to="/" replace />} />
