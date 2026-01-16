@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 import { 
   getTransactions, 
   createTransaction as apiCreateTransaction,
@@ -17,6 +18,7 @@ import {
 export const FinanceContext = createContext();
 
 export function FinanceProvider({ children }) {
+  const { isAuth } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [summary, setSummary] = useState({});
@@ -32,6 +34,10 @@ export function FinanceProvider({ children }) {
   const loadData = async (filters = {}) => {
     // Don't load if not authenticated
     if (!isAuthenticated()) {
+      // Clear data when not authenticated
+      setTransactions([]);
+      setBudgets([]);
+      setSummary({});
       return;
     }
 
@@ -253,12 +259,17 @@ export function FinanceProvider({ children }) {
     }
   };
 
-  // Load data only if authenticated
+  // Load data when authentication status changes
   useEffect(() => {
-    if (isAuthenticated()) {
+    if (isAuth) {
       loadData();
+    } else {
+      // Clear data when logged out
+      setTransactions([]);
+      setBudgets([]);
+      setSummary({});
     }
-  }, []);
+  }, [isAuth]);
 
   const contextValue = {
     // State
