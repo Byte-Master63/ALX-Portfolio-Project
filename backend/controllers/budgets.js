@@ -3,10 +3,14 @@ const { readBudgets, writeBudgets } = require('../services/storage');
 const { NotFoundError, ConflictError } = require('../middleware/errorHandler');
 
 /**
- * Get all budgets
+ * Get all budgets for the authenticated user
  */
 async function getBudgets(req, res) {
-    const budgets = await readBudgets();
+    const userId = req.userId;
+    const allBudgets = await readBudgets();
+    
+    // Filter budgets by user ID
+    const budgets = allBudgets.filter(b => b.userId === userId);
     
     // Sort by category alphabetically
     budgets.sort((a, b) => a.category.localeCompare(b.category));
@@ -19,11 +23,12 @@ async function getBudgets(req, res) {
 }
 
 /**
- * Get a single budget by ID
+ * Get a single budget by ID (must belong to user)
  */
 async function getBudgetById(req, res) {
+    const userId = req.userId;
     const budgets = await readBudgets();
-    const budget = budgets.find(b => b.id === req.params.id);
+    const budget = budgets.find(b => b.id === req.params.id && b.userId === userId);
     
     if (!budget) {
         throw new NotFoundError('Budget not found');
@@ -36,18 +41,18 @@ async function getBudgetById(req, res) {
 }
 
 /**
- * Create a new budget
+ * Create a new budget for the authenticated user
  */
 async function createBudget(req, res) {
-    // Validation already handled by middleware
+    const userId = req.userId;
     const { category, limit } = req.body;
     const budgets = await readBudgets();
     
     const normalizedCategory = sanitizeInput(category).toLowerCase();
     
-    // Check if budget for this category already exists
+    // Check if budget for this category already exists for this user
     const existingBudget = budgets.find(
-        b => b.category.toLowerCase() === normalizedCategory
+        b => b.userId === userId && b.category.toLowerCase() === normalizedCategory
     );
     
     if (existingBudget) {
@@ -58,6 +63,7 @@ async function createBudget(req, res) {
     
     const newBudget = {
         id: generateId(),
+        userId: userId, // Associate with user
         category: normalizedCategory,
         limit: parseFloat(limit),
         createdAt: new Date().toISOString()
@@ -74,13 +80,15 @@ async function createBudget(req, res) {
 }
 
 /**
- * Update an existing budget
+ * Update an existing budget (must belong to user)
  */
 async function updateBudget(req, res) {
-    // Validation already handled by middleware
+    const userId = req.userId;
     const { category, limit } = req.body;
     const budgets = await readBudgets();
-    const budgetIndex = budgets.findIndex(b => b.id === req.params.id);
+    const budgetIndex = budgets.findIndex(
+        b => b.id === req.params.id && b.userId === userId
+    );
     
     if (budgetIndex === -1) {
         throw new NotFoundError('Budget not found');
@@ -88,9 +96,10 @@ async function updateBudget(req, res) {
     
     const normalizedCategory = sanitizeInput(category).toLowerCase();
     
-    // Check if updating category conflicts with another budget
+    // Check if updating category conflicts with another budget for this user
     const conflictingBudget = budgets.find(
-        b => b.id !== req.params.id && 
+        b => b.userId === userId && 
+        b.id !== req.params.id && 
         b.category.toLowerCase() === normalizedCategory
     );
     
@@ -102,6 +111,7 @@ async function updateBudget(req, res) {
     
     const updatedBudget = {
         id: budgets[budgetIndex].id,
+        userId: budgets[budgetIndex].userId, // Preserve userId
         category: normalizedCategory,
         limit: parseFloat(limit),
         createdAt: budgets[budgetIndex].createdAt,
@@ -119,11 +129,14 @@ async function updateBudget(req, res) {
 }
 
 /**
- * Delete a budget
+ * Delete a budget (must belong to user)
  */
 async function deleteBudget(req, res) {
+    const userId = req.userId;
     const budgets = await readBudgets();
-    const budgetIndex = budgets.findIndex(b => b.id === req.params.id);
+    const budgetIndex = budgets.findIndex(
+        b => b.id === req.params.id && b.userId === userId
+    );
     
     if (budgetIndex === -1) {
         throw new NotFoundError('Budget not found');
