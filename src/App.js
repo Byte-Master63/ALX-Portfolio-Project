@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/Dashboard';
+import Profile from './pages/Profile/Profile';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import NotFound from './pages/NotFound/NotFound';
@@ -25,6 +26,20 @@ function App() {
                 <Header />
                 <main className="container">
                   <Dashboard />
+                </main>
+              </>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <>
+                <Header />
+                <main className="container">
+                  <Profile />
                 </main>
               </>
             </ProtectedRoute>
