@@ -1,15 +1,19 @@
+// backend/controllers/transactions.js - UPDATED
 const { readTransactions, writeTransactions } = require('../services/storage');
 const { generateId, sanitizeInput, getCurrentDate } = require('../services/utils');
 const { NotFoundError } = require('../middleware/errorHandler');
 
 /**
- * Get all transactions with optional filtering
- * Query params: type, category, startDate, endDate, limit, offset
+ * Get all transactions for the authenticated user
  */
 async function getTransactions(req, res) {
     const { type, category, startDate, endDate, limit, offset } = req.query;
+    const userId = req.userId; // From auth middleware
     
-    let transactions = await readTransactions();
+    let allTransactions = await readTransactions();
+    
+    // Filter by user ID first
+    let transactions = allTransactions.filter(t => t.userId === userId);
     
     // Filter by type
     if (type && ['income', 'expense'].includes(type)) {
@@ -62,11 +66,12 @@ async function getTransactions(req, res) {
 }
 
 /**
- * Get a single transaction by ID
+ * Get a single transaction by ID (must belong to user)
  */
 async function getTransactionById(req, res) {
+    const userId = req.userId;
     const transactions = await readTransactions();
-    const transaction = transactions.find(t => t.id === req.params.id);
+    const transaction = transactions.find(t => t.id === req.params.id && t.userId === userId);
     
     if (!transaction) {
         throw new NotFoundError('Transaction not found');
@@ -79,14 +84,15 @@ async function getTransactionById(req, res) {
 }
 
 /**
- * Create a new transaction
+ * Create a new transaction for the authenticated user
  */
 async function createTransaction(req, res) {
-    // Validation already handled by middleware
+    const userId = req.userId;
     const transactions = await readTransactions();
     
     const newTransaction = {
         id: generateId(),
+        userId: userId, // Associate with user
         description: sanitizeInput(req.body.description),
         amount: parseFloat(req.body.amount),
         category: sanitizeInput(req.body.category).toLowerCase(),
@@ -106,20 +112,23 @@ async function createTransaction(req, res) {
 }
 
 /**
- * Update an existing transaction
+ * Update an existing transaction (must belong to user)
  */
 async function updateTransaction(req, res) {
-    // Validation already handled by middleware
+    const userId = req.userId;
     const transactions = await readTransactions();
-    const transactionIndex = transactions.findIndex(t => t.id === req.params.id);
+    const transactionIndex = transactions.findIndex(
+        t => t.id === req.params.id && t.userId === userId
+    );
     
     if (transactionIndex === -1) {
         throw new NotFoundError('Transaction not found');
     }
     
-    // Keep original ID and createdAt, update everything else
+    // Keep original ID, userId and createdAt, update everything else
     const updatedTransaction = {
         id: transactions[transactionIndex].id,
+        userId: transactions[transactionIndex].userId, // Preserve userId
         description: sanitizeInput(req.body.description),
         amount: parseFloat(req.body.amount),
         category: sanitizeInput(req.body.category).toLowerCase(),
@@ -140,11 +149,14 @@ async function updateTransaction(req, res) {
 }
 
 /**
- * Delete a transaction
+ * Delete a transaction (must belong to user)
  */
 async function deleteTransaction(req, res) {
+    const userId = req.userId;
     const transactions = await readTransactions();
-    const transactionIndex = transactions.findIndex(t => t.id === req.params.id);
+    const transactionIndex = transactions.findIndex(
+        t => t.id === req.params.id && t.userId === userId
+    );
     
     if (transactionIndex === -1) {
         throw new NotFoundError('Transaction not found');
