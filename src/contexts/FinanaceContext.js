@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useRef } from 'react';
 import { AuthContext } from './AuthContext';
 import { 
   getTransactions, 
@@ -27,6 +27,9 @@ export function FinanceProvider({ children }) {
   
   // Transaction filters
   const [transactionFilters, setTransactionFilters] = useState({});
+  
+  // Debounce timer for background refresh
+  const refreshTimerRef = useRef(null);
 
   /**
    * Load all financial data
@@ -57,16 +60,44 @@ export function FinanceProvider({ children }) {
     } catch (err) {
       console.error('Error loading data:', err);
       setError(err.message);
+      // Don't clear data on error, keep showing old data
     } finally {
       setLoading(false);
     }
   };
 
   /**
-   * Refresh data with current filters
+   * Refresh data with current filters (silently in background)
+   * Debounced to prevent multiple simultaneous calls
    */
   const refreshData = () => {
-    loadData(transactionFilters);
+    if (!isAuthenticated()) {
+      return;
+    }
+
+    // Clear existing timer
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+    }
+
+    // Debounce the refresh by 500ms
+    refreshTimerRef.current = setTimeout(async () => {
+      try {
+        // Refresh silently without setting loading state
+        const [transactionsData, budgetsData, summaryData] = await Promise.all([
+          getTransactions(transactionFilters),
+          getBudgets(),
+          getSummary(transactionFilters)
+        ]);
+        
+        setTransactions(transactionsData);
+        setBudgets(budgetsData);
+        setSummary(summaryData);
+      } catch (err) {
+        console.error('Error refreshing data:', err);
+        // Don't show error to user on background refresh
+      }
+    }, 500);
   };
 
   // ==================== TRANSACTION FUNCTIONS ====================
@@ -76,12 +107,15 @@ export function FinanceProvider({ children }) {
    */
   const createTransaction = async (transactionData) => {
     try {
-      setLoading(true);
       setError(null);
       const result = await apiCreateTransaction(transactionData);
       
       if (result.success) {
-        await refreshData();
+        // Optimistic update - add to local state immediately
+        setTransactions(prev => [result.data, ...prev]);
+        
+        // Refresh in background without blocking
+        refreshData();
         return { success: true, data: result.data };
       }
       
@@ -90,8 +124,6 @@ export function FinanceProvider({ children }) {
       console.error('Error creating transaction:', err);
       setError(err.message);
       return { success: false, message: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -100,12 +132,17 @@ export function FinanceProvider({ children }) {
    */
   const updateTransaction = async (id, transactionData) => {
     try {
-      setLoading(true);
       setError(null);
       const result = await apiUpdateTransaction(id, transactionData);
       
       if (result.success) {
-        await refreshData();
+        // Optimistic update - update local state immediately
+        setTransactions(prev => 
+          prev.map(t => t.id === id ? result.data : t)
+        );
+        
+        // Refresh in background without blocking
+        refreshData();
         return { success: true, data: result.data };
       }
       
@@ -114,8 +151,6 @@ export function FinanceProvider({ children }) {
       console.error('Error updating transaction:', err);
       setError(err.message);
       return { success: false, message: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -124,12 +159,15 @@ export function FinanceProvider({ children }) {
    */
   const deleteTransaction = async (id) => {
     try {
-      setLoading(true);
       setError(null);
       const result = await apiDeleteTransaction(id);
       
       if (result.success) {
-        await refreshData();
+        // Optimistic update - remove from local state immediately
+        setTransactions(prev => prev.filter(t => t.id !== id));
+        
+        // Refresh in background without blocking
+        refreshData();
         return { success: true };
       }
       
@@ -138,8 +176,6 @@ export function FinanceProvider({ children }) {
       console.error('Error deleting transaction:', err);
       setError(err.message);
       return { success: false, message: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -158,12 +194,15 @@ export function FinanceProvider({ children }) {
    */
   const createBudget = async (budgetData) => {
     try {
-      setLoading(true);
       setError(null);
       const result = await apiCreateBudget(budgetData);
       
       if (result.success) {
-        await refreshData();
+        // Optimistic update - add to local state immediately
+        setBudgets(prev => [...prev, result.data]);
+        
+        // Refresh in background without blocking
+        refreshData();
         return { success: true, data: result.data };
       }
       
@@ -172,8 +211,6 @@ export function FinanceProvider({ children }) {
       console.error('Error creating budget:', err);
       setError(err.message);
       return { success: false, message: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -182,12 +219,17 @@ export function FinanceProvider({ children }) {
    */
   const updateBudget = async (id, budgetData) => {
     try {
-      setLoading(true);
       setError(null);
       const result = await apiUpdateBudget(id, budgetData);
       
       if (result.success) {
-        await refreshData();
+        // Optimistic update - update local state immediately
+        setBudgets(prev => 
+          prev.map(b => b.id === id ? result.data : b)
+        );
+        
+        // Refresh in background without blocking
+        refreshData();
         return { success: true, data: result.data };
       }
       
@@ -196,8 +238,6 @@ export function FinanceProvider({ children }) {
       console.error('Error updating budget:', err);
       setError(err.message);
       return { success: false, message: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -206,12 +246,15 @@ export function FinanceProvider({ children }) {
    */
   const deleteBudget = async (id) => {
     try {
-      setLoading(true);
       setError(null);
       const result = await apiDeleteBudget(id);
       
       if (result.success) {
-        await refreshData();
+        // Optimistic update - remove from local state immediately
+        setBudgets(prev => prev.filter(b => b.id !== id));
+        
+        // Refresh in background without blocking
+        refreshData();
         return { success: true };
       }
       
@@ -220,8 +263,6 @@ export function FinanceProvider({ children }) {
       console.error('Error deleting budget:', err);
       setError(err.message);
       return { success: false, message: err.message };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -270,6 +311,15 @@ export function FinanceProvider({ children }) {
       setSummary({});
     }
   }, [isAuth]);
+  
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+      }
+    };
+  }, []);
 
   const contextValue = {
     // State
