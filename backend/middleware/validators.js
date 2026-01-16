@@ -1,5 +1,4 @@
 const { isValidDate, sanitizeInput } = require('../services/utils');
-const { sanitizeInput } = require('../services/utils');
 
 // Define allowed categories
 const VALID_CATEGORIES = [
@@ -341,6 +340,103 @@ function validateProfileUpdateMiddleware(req, res, next) {
     next();
 }
 
+/**
+
+ * Validates profile update data
+
+ */
+
+function validateProfileUpdate(data) {
+
+    const errors = [];
+
+
+
+    if (data.name !== undefined && data.name !== null) {
+
+        const name = sanitizeInput(data.name);
+
+        if (name.length > 0 && name.length < 2) {
+
+            errors.push('Name must be at least 2 characters long');
+
+        } else if (name.length > 100) {
+
+            errors.push('Name must not exceed 100 characters');
+
+        }
+
+    }
+
+
+
+    if (data.newPassword) {
+
+        if (!data.currentPassword) {
+
+            errors.push('Current password is required to change password');
+
+        }
+
+
+
+        if (data.newPassword.length < 6) {
+
+            errors.push('New password must be at least 6 characters long');
+
+        } else if (data.newPassword.length > 100) {
+
+            errors.push('New password must not exceed 100 characters');
+
+        }
+
+    }
+
+
+
+    if (data.currentPassword && !data.newPassword) {
+
+        errors.push('New password is required when current password is provided');
+
+    }
+
+
+
+    return {
+
+        isValid: errors.length === 0,
+
+        errors
+
+    };
+
+}
+
+function validateProfileUpdateMiddleware(req, res, next) {
+
+    const validation = validateProfileUpdate(req.body);
+
+
+
+    if (!validation.isValid) {
+
+        return res.status(400).json({
+
+            success: false,
+
+            message: 'Validation failed',
+
+            errors: validation.errors
+
+        });
+
+    }
+
+
+
+    next();
+
+}
 
 module.exports = {
     validateTransaction,
@@ -354,5 +450,7 @@ module.exports = {
     validateProfileUpdate,
     validateProfileUpdateMiddleware,
     VALID_CATEGORIES,
-    TRANSACTION_TYPES
+    TRANSACTION_TYPES,
+    validateProfileUpdate,
+    validateProfileUpdateMiddleware
 };
