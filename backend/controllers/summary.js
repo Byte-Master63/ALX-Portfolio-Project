@@ -1,13 +1,18 @@
 const { readTransactions, readBudgets } = require('../services/storage');
 
 /**
- * Get overall financial summary with optional date filtering
+ * Get overall financial summary for the authenticated user
  */
 async function getSummary(req, res) {
+    const userId = req.userId;
     const { startDate, endDate } = req.query;
     
-    let transactions = await readTransactions();
-    const budgets = await readBudgets();
+    let allTransactions = await readTransactions();
+    const allBudgets = await readBudgets();
+    
+    // Filter transactions and budgets by user ID
+    let transactions = allTransactions.filter(t => t.userId === userId);
+    const budgets = allBudgets.filter(b => b.userId === userId);
     
     // Validate date range
     if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
@@ -38,7 +43,7 @@ async function getSummary(req, res) {
     
     const balance = totalIncome - totalExpenses;
     
-    // Calculate spending by category (normalized to lowercase)
+    // Calculate spending by category
     const spendingByCategory = transactions
         .filter(t => t.type === 'expense')
         .reduce((acc, t) => {
@@ -96,11 +101,15 @@ async function getSummary(req, res) {
 }
 
 /**
- * Get monthly breakdown of income and expenses
+ * Get monthly breakdown for the authenticated user
  */
 async function getMonthlySummary(req, res) {
+    const userId = req.userId;
     const year = parseInt(req.query.year) || new Date().getFullYear();
-    const transactions = await readTransactions();
+    const allTransactions = await readTransactions();
+    
+    // Filter transactions by user ID
+    const transactions = allTransactions.filter(t => t.userId === userId);
     
     // Validate year
     if (isNaN(year) || year < 2000 || year > 2100) {
@@ -161,12 +170,16 @@ async function getMonthlySummary(req, res) {
 }
 
 /**
- * Get detailed breakdown by category
+ * Get detailed breakdown by category for the authenticated user
  */
 async function getCategorySummary(req, res) {
+    const userId = req.userId;
     const { type, startDate, endDate } = req.query;
     
-    let transactions = await readTransactions();
+    let allTransactions = await readTransactions();
+    
+    // Filter transactions by user ID
+    let transactions = allTransactions.filter(t => t.userId === userId);
     
     // Validate type if provided
     if (type && !['income', 'expense'].includes(type)) {
@@ -230,7 +243,7 @@ async function getCategorySummary(req, res) {
         return acc;
     }, {});
     
-    // Convert to array, calculate averages, and sort by total (descending)
+    // Convert to array, calculate averages, and sort by total
     const categorySummary = Object.values(categoryData)
         .map(cat => ({
             ...cat,

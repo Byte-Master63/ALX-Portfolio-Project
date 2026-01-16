@@ -9,15 +9,6 @@
     "createdAt": "2025-11-11T02:41:59.689Z"
   },
   {
-    "id": "mhtyv437-8f101f5a84b68419",
-    "description": "Uber to work",
-    "amount": 85.5,
-    "category": "transport",
-    "type": "expense",
-    "date": "2025-11-09",
-    "createdAt": "2025-11-11T02:43:07.511Z"
-  },
-  {
     "id": "mhtywg00-84930362ecdb3e3c",
     "description": "Netflix subscription",
     "amount": 199,
@@ -36,12 +27,102 @@
     "createdAt": "2025-11-11T02:45:11.355Z"
   },
   {
-    "id": "mhuvn6ua-75c1da51a2647d88",
-    "description": "Grocery shopping at Woolworths",
-    "amount": 450.75,
+    "id": "mkh85bag-d5721ad6fa1a9f59",
+    "description": "Salary",
+    "amount": 25000,
+    "category": "salary",
+    "type": "income",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T18:41:06.665Z"
+  },
+  {
+    "id": "mkh9t1wh-47b7000f4754595f",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Monthly Salary",
+    "amount": 30000,
+    "category": "salary",
+    "type": "income",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T19:27:34.451Z"
+  },
+  {
+    "id": "mkh9um7y-4ee748d00b8ee1dd",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Project Revenue",
+    "amount": 15000,
+    "category": "freelance",
+    "type": "income",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T19:28:46.847Z"
+  },
+  {
+    "id": "mkh9whhl-99dba0f84d253dbe",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Interest Income- Savings Account",
+    "amount": 2300,
+    "category": "savings",
+    "type": "income",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T19:30:14.026Z"
+  },
+  {
+    "id": "mkh9xrz8-a8a72b0e56032593",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Car Finance Payment",
+    "amount": 15000,
+    "category": "transport",
+    "type": "expense",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T19:31:14.277Z"
+  },
+  {
+    "id": "mkh9yy8c-cccda6f636be083e",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Groceries",
+    "amount": 3500,
     "category": "food",
     "type": "expense",
-    "date": "2025-11-10",
-    "createdAt": "2025-11-11T18:00:45.170Z"
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T19:32:09.037Z"
+  },
+  {
+    "id": "mkha18i2-3a932e6cc99a293e",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Netflix Premium Subscription",
+    "amount": 300,
+    "category": "entertainment",
+    "type": "expense",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T19:33:55.658Z"
+  },
+  {
+    "id": "mkhb3vv0-79fd154eb2505f80",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Gym Subscription",
+    "amount": 850,
+    "category": "fitness",
+    "type": "expense",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T20:03:59.638Z"
+  },
+  {
+    "id": "mkhb5ea6-a3418a098abd8e08",
+    "userId": "mi559q5f-19c434ebe9e92c01",
+    "description": "Medical Aid",
+    "amount": 630,
+    "category": "healthcare",
+    "type": "expense",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T20:05:09.390Z"
+  },
+  {
+    "id": "mkhbeatm-ce6af6dd0323efb3",
+    "userId": "mkh83q8m-61a1a702b8b6682a",
+    "description": "Monthly Salary",
+    "amount": 25000,
+    "category": "salary",
+    "type": "income",
+    "date": "2026-01-16",
+    "createdAt": "2026-01-16T20:12:04.811Z"
   }
 ]

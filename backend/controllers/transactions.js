@@ -1,4 +1,3 @@
-// backend/controllers/transactions.js - UPDATED
 const { readTransactions, writeTransactions } = require('../services/storage');
 const { generateId, sanitizeInput, getCurrentDate } = require('../services/utils');
 const { NotFoundError } = require('../middleware/errorHandler');

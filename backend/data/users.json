@@ -12,5 +12,12 @@
     "email": "lilprizzy3867@gmail.com",
     "password": "$2b$10$MX.gur8ln6z4awHfNfTHLOlrdGXet3NDyKjXTNGD8GvsAxCR8IvmW",
     "createdAt": "2025-11-18T22:27:54.915Z"
+  },
+  {
+    "id": "mkh83q8m-61a1a702b8b6682a",
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "password": "$2b$10$O14vP1MOgKkmK4H6C8s44epTdlYGUkZOE/nT1o9ZvHIGBCnuZlh3u",
+    "createdAt": "2026-01-16T18:39:52.726Z"
   }
 ]
